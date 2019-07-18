@@ -1,3 +1,7 @@
 [submodule "themes/hello-friend"]
 	path = themes/hello-friend
 	url = https://github.com/zporter/hugo-theme-hello-friend.git
+[submodule "public"]
+	path = public
+	url = git@github.com:zporter/zachporter.dev.git
+	branch = gh-pages
