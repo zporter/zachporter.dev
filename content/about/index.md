@@ -1,6 +1,8 @@
 +++
 title = "About Me"
 showReadingTime = false
+cover = "cover.jpg"
+useRelativeCover = true
 +++
 
 I have been in software development for over a decade working on a variety of solutions, starting with a Windows desktop application and eventually transitioning onto the web. I have worked with a variety of businesses ranging from startups all the way to big brands. Software I have worked on includes anything from small internal applications to large e-commerce solutions to large data transformation [(ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) pipelines. I have built production systems in a variety of languages and frameworks including Ruby / Rails, Python, and, more recently, Elixir and Erlang. A bulk of my experience comes from working with large object-oriented codebases, but my current passion lies in functional programming. I enjoy building software that makes others' lives easier, so they have a positive technological experience.
