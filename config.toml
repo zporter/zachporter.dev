@@ -14,6 +14,12 @@ paginate = 5
   # Show reading time in minutes for posts
   showReadingTime = true
 
+  # Social links
+  linkedin = "zach-porter-5058b0181"
+  twitter = "zporter9"
+  github = "zporter"
+  email = "zporter9@gmail.com"
+
 [languages]
   [languages.en]
     keywords = "programmer, software engineer, developer"
