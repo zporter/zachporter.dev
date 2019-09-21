@@ -8,8 +8,15 @@ hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
 # Go To Public folder
 cd public
 
+# Configure username and email for Github
+git config user.name "${GITHUB_ACTOR}"
+git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
 # Add changes to git.
 git add .
+
+git status
+git branch
 
 # Commit changes.
 msg="publishing site `date`"

@@ -12,7 +12,9 @@ jobs:
     
     steps:
     - name: Use https for git submodules
-      run: echo -e '[url "https://github.com/"]\n  insteadOf = "git@github.com:"' >> ~/.gitconfig
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: echo -e "[url \"https://x-access-token:$GITHUB_TOKEN@github.com/\"]\n  insteadOf = \"git@github.com:\"" >> ~/.gitconfig
     - uses: actions/checkout@v1
       with:
         submodules: true
@@ -25,8 +27,5 @@ jobs:
         https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb && \
         sudo dpkg -i /tmp/hugo.deb && \
         rm /tmp/hugo.deb
-
     - name: Build & Release Site
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: ./bin/deploy.sh
