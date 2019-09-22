@@ -13,6 +13,9 @@
 <link rel="canonical" href="https://zachporter.dev/" />
 
 
+
+
+
 <link rel="stylesheet" href="https://zachporter.dev/assets/style.css">
 
 
@@ -49,8 +52,8 @@
   <span class="header__inner">
     <a href="/" class="logo" style="text-decoration: none;">
   
-    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" width="44" height="44" viewBox="0 0 44 44">
-  <polyline fill="none" stroke="#000" stroke-width="2" points="15 8 29.729 22.382 15 35.367"/>
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
 </svg>
 </span>
     <span class="logo__text">zachporter.dev</span>
@@ -106,22 +109,33 @@
   <div class="posts">
     
     
+
+    
+    
+      
+    
     
 
     
     <div class="post on-list">
-      <h1 class="post-title"><a href="https://zachporter.dev/posts/">Posts</a></h1>
+      <h1 class="post-title"><a href="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/">Writing an API Wrapper in Elixir With HTTPoison</a></h1>
       <div class="post-meta">
         <span class="post-date">
           2018-01-19
         </span>
         
         
-          <span class="post-read-time">— 0 min read</span>
+          <span class="post-read-time">— 3 min read</span>
         
       </div>
 
 
+      
+        <span class="post-tags">
+          
+            #<a href="https://zachporter.dev/tags/elixir/">elixir</a>&nbsp;
+          
+        </span>
       
 
       
@@ -129,9 +143,12 @@
       <div class="post-content">
         
           
+            As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&rsquo;t used.
+          
         
       </div>
-      <div><a class="read-more button" href="/posts/">Read more →</a></div>
+      <div><a class="read-more button" href="/posts/writing-an-api-wrapper-in-elixir-with-httpoison/">Read more →</a></div>
     </div>
     
     <div class="pagination">
@@ -151,8 +168,8 @@
     
       <a href="/" class="logo" style="text-decoration: none;">
   
-    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" width="44" height="44" viewBox="0 0 44 44">
-  <polyline fill="none" stroke="#000" stroke-width="2" points="15 8 29.729 22.382 15 35.367"/>
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
 </svg>
 </span>
     <span class="logo__text">zachporter.dev</span>
