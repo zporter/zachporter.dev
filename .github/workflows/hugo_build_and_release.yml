@@ -11,13 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Use https for git submodules
+    - name: Configure Git for Github
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: echo -e "[url \"https://x-access-token:$GITHUB_TOKEN@github.com/\"]\n  insteadOf = \"git@github.com:\"" >> ~/.gitconfig
+      run: |
+        echo -e "[url \"https://x-access-token:$GITHUB_TOKEN@github.com/\"]\n  insteadOf = \"git@github.com:\"" >> ~/.gitconfig
+        git config --global user.name "${GITHUB_ACTOR}"
+        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
     - uses: actions/checkout@v1
       with:
         submodules: true
+        token: ${{ secrets.GITHUB_PAT }}
     - name: Install Dependencies
       env:
         HUGO_VERSION: 0.58.3
@@ -27,5 +31,7 @@ jobs:
         https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb && \
         sudo dpkg -i /tmp/hugo.deb && \
         rm /tmp/hugo.deb
-    - name: Build & Release Site
-      run: ./bin/deploy.sh
+    - name: Publish Site
+      env:
+        REPOSITORY: "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+      run: ./bin/publish.sh
