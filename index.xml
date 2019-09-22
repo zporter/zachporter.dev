@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zach Porter: Software Engineer</title>
+    <link>https://zachporter.dev/</link>
+    <description>Recent content on Zach Porter: Software Engineer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Jan 2018 12:00:00 -0500</lastBuildDate>
+    
+	<atom:link href="https://zachporter.dev/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Writing an API Wrapper in Elixir With HTTPoison</title>
+      <link>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</link>
+      <pubDate>Fri, 19 Jan 2018 12:00:00 -0500</pubDate>
+      
+      <guid>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</guid>
+      <description>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&amp;rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&amp;rsquo;t used.</description>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>https://zachporter.dev/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://zachporter.dev/about/</guid>
+      <description>I have been in software development for over a decade working on a variety of solutions, starting with a Windows desktop application and eventually transitioning onto the web. I have worked with a variety of businesses ranging from startups all the way to big brands. Software I have worked on includes anything from small internal applications to large e-commerce solutions to large data transformation (ETL) pipelines. I have built production systems in a variety of languages and frameworks including Ruby / Rails, Python, and, more recently, Elixir and Erlang.</description>
+    </item>
+    
+  </channel>
+</rss>

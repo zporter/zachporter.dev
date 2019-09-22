@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>Writing an API Wrapper in Elixir With HTTPoison :: Zach Porter: Software Engineer</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&amp;rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&amp;rsquo;t used."/>
+<meta name="keywords" content="programmer, software engineer, developer"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/" />
+
+
+<link rel="stylesheet" href="https://zachporter.dev/assets/style.css">
+
+
+<link rel="stylesheet" href="https://zachporter.dev/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://zachporter.dev/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="https://zachporter.dev/img/favicon.png">
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Writing an API Wrapper in Elixir With HTTPoison"/>
+<meta name="twitter:description" content="As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&rsquo;t used."/>
+
+
+
+<meta property="og:title" content="Writing an API Wrapper in Elixir With HTTPoison" />
+<meta property="og:description" content="As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&rsquo;t used." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/" />
+<meta property="article:published_time" content="2018-01-19T12:00:00-05:00" />
+<meta property="article:modified_time" content="2018-01-19T12:00:00-05:00" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" width="44" height="44" viewBox="0 0 44 44">
+  <polyline fill="none" stroke="#000" stroke-width="2" points="15 8 29.729 22.382 15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">zachporter.dev</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  <div class="post">
+    <h2 class="post-title"><a href="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/">Writing an API Wrapper in Elixir With HTTPoison</a></h2>
+    <div class="post-meta">
+      
+        <span class="post-date">
+            2018-01-19
+        </span>
+      
+      
+      
+        <span class="post-read-time">— 3 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="https://zachporter.dev/tags/elixir/">elixir</a>&nbsp;
+        
+      </span>
+    
+
+    
+
+    <div class="post-content">
+      
+
+<p>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use <a href="https://github.com/edgurgel/httpoison">HTTPoison</a> to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:</p>
+
+<ol>
+<li>Only the paths that are used are brought in, alleviating excess code from API implementation that isn&rsquo;t used.</li>
+<li>I have confidence in the level of tests written in the implementation.</li>
+<li>I can easily update the implementation when the API is updated.</li>
+</ol>
+
+<p>HTTPoison makes this super easy for us in Elixir. The library can be used in a couple of different ways.</p>
+
+<h3 id="the-httpoison-module">The HTTPoison Module</h3>
+
+<p>We can use <a href="https://hexdocs.pm/httpoison/HTTPoison.html">the <code>HTTPoison</code> module</a> to issue HTTP requests and parse responses. This is the example from the documentation:</p>
+
+<pre><code class="language-elixir">iex&gt; HTTPoison.get!(&quot;https://api.github.com&quot;)
+%HTTPoison.Response{status_code: 200,
+                    headers: [{&quot;content-type&quot;, &quot;application/json&quot;}],
+                    body: &quot;{...}&quot;}
+</code></pre>
+
+<p>This gives us a very simple way to interface with requests and responses from APIs. My preference, however, is to write a wrapper module using the <code>HTTPoison.Base</code> module.</p>
+
+<h3 id="the-httpoison-base-module">The HTTPoison.Base Module</h3>
+
+<p>When writing an API wrapper, we can define our own module with a name that corresponds with the API. We can then tell that module to use <a href="https://hexdocs.pm/httpoison/HTTPoison.Base.html">the <code>HTTPoison.Base</code> module</a> and override the functions as required by our specific implementation. Under the hood, the <code>HTTPoison</code> module just uses <code>HTTPoison.Base</code> without overriding any default function.</p>
+
+<p>The following example is an annotated snippet taken from a wrapper that I wrote for <a href="https://www.google.com/recaptcha/intro/">Google&rsquo;s Recaptcha service</a>:</p>
+
+<pre><code class="language-elixir">defmodule MyApp.Recaptcha do
+  @moduledoc &quot;&quot;&quot;
+  Interface to Google's Recaptcha service:
+  https://www.google.com/recaptcha/intro/index.html
+  &quot;&quot;&quot;
+
+  use HTTPoison.Base
+
+  # Set the endpoint to send requests. There is only one for verifying the site,
+  # but this could easily be the base URL to append paths to.
+  @endpoint &quot;https://www.google.com/recaptcha/api/siteverify&quot;
+
+  @doc &quot;&quot;&quot;
+  Post given Recaptcha form response to Google.
+
+  Returns `:ok` if successful response. Returns `:error` if anything went wrong.
+  &quot;&quot;&quot;
+  @spec verify(binary) :: :ok | :error
+  def verify(response) do
+    params = [
+      {&quot;secret&quot;, secret()},
+      {&quot;response&quot;, response}
+    ]
+
+    @endpoint
+    |&gt; post({:form, params})
+    |&gt; process_verify
+  end
+
+
+  # The secret to send with the post request to Google.
+  @spec secret() :: binary
+  defp secret() do
+    System.get_env(&quot;RECAPTCHA_SECRET&quot;)
+  end
+
+  @spec process_verify({atom, binary | map}) :: atom
+  defp process_verify({:ok, %{body: %{success: true}}}), do: :ok
+  defp process_verify(_), do: :error
+
+  # HTTPoison handlers -------------------------------------
+  @spec process_response_body(any) :: binary | %{}
+  defp process_response_body(&quot;&quot;), do: &quot;&quot;
+  defp process_response_body(body) do
+    Poison.decode!(body, keys: :atoms)
+  end
+end
+</code></pre>
+
+<p>Calling <code>MyApp.Recaptcha.verify(&quot;recaptcha_client_token&quot;)</code> will issue a POST request to the <code>@endpoint</code> then process the response in <code>process_verify/1</code>. Here, I&rsquo;ve overridden the <code>process_response_body/1</code> function to use the <a href="https://github.com/devinus/poison">Poison</a> library to decode the response body and return an Elixir Map with atom keys. You can find a list of all overridable functions with examples <a href="https://hexdocs.pm/httpoison/HTTPoison.Base.html#module-overriding-functions">in the HTTPoison documentation</a>.</p>
+
+<p>This is my preferred approach to interfacing with APIs. I&rsquo;ve written small wrappers for Vimeo, Mailchimp, and Google&rsquo;s Recaptcha (above) to name a few. It&rsquo;s a real easy way to get an API wrapper up and running in Elixir with a minimal amount of code. And I only implement the parts of the API that I use.</p>
+
+<p>Have you used <code>HTTPoison</code>? Interfaced with an API in Elixir another way? Let me know in the comments over <a href="https://news.ycombinator.com/item?id=16116148">on Hacker News</a>.</p>
+
+    </div>
+    
+
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" width="44" height="44" viewBox="0 0 44 44">
+  <polyline fill="none" stroke="#000" stroke-width="2" points="15 8 29.729 22.382 15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">zachporter.dev</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+      <div class="copyright">
+        <span>© 2019</span>
+
+        <div class="social-links">
+          
+  <span class="social-link">
+    <a href="https://github.com/zporter" target="_blank">
+      <i class="fab fa-github-square"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="https://twitter.com/zporter9" target="_blank">
+      <i class="fab fa-twitter-square"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="https://www.linkedin.com/in/zach-porter-5058b0181" target="_blank">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="mailto:zporter9@gmail.com" target="_blank">
+      <i class="fas fa-envelope-square"></i>
+    </a>
+  </span>
+
+
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+<script src="https://zachporter.dev/assets/main.js"></script>
+<script src="https://zachporter.dev/assets/prism.js"></script>
+
+
+      
+    </div>
+
+    
+  </body>
+</html>

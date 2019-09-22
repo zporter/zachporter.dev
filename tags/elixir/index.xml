@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>elixir on Zach Porter: Software Engineer</title>
+    <link>https://zachporter.dev/tags/elixir/</link>
+    <description>Recent content in elixir on Zach Porter: Software Engineer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Jan 2018 12:00:00 -0500</lastBuildDate>
+    
+	<atom:link href="https://zachporter.dev/tags/elixir/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Writing an API Wrapper in Elixir With HTTPoison</title>
+      <link>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</link>
+      <pubDate>Fri, 19 Jan 2018 12:00:00 -0500</pubDate>
+      
+      <guid>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</guid>
+      <description>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&amp;rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&amp;rsquo;t used.</description>
+    </item>
+    
+  </channel>
+</rss>

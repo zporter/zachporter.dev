@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://zachporter.dev/tags/elixir/</loc>
+    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/posts/</loc>
+    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/</loc>
+    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</loc>
+    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/</loc>
+    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/categories/</loc>
+  </url>
+  
+</urlset>
