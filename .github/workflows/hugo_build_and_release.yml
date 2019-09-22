@@ -21,7 +21,6 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: true
-        token: ${{ secrets.GITHUB_PAT }}
     - name: Install Dependencies
       env:
         HUGO_VERSION: 0.58.3
