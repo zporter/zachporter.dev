@@ -12,10 +12,7 @@ jobs:
     
     steps:
     - name: Configure Git for Github
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo -e "[url \"https://x-access-token:$GITHUB_TOKEN@github.com/\"]\n  insteadOf = \"git@github.com:\"" >> ~/.gitconfig
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
     - uses: actions/checkout@v1
