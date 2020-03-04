@@ -1,11 +1,9 @@
 ---
-title: "Publishing a Hugo Site to GitHub Pages via Github Actions"
+title: "Publishing a Hugo Site to GitHub Pages via GitHub Actions"
 date: 2020-03-03T12:00:00-05:00
 comments: false
 tags: ["hugo"]
 ---
-
-## Background
 
 As of this writing, I am currently using the [Hugo](https://gohugo.io/) static site generator for this site and publishing to [GitHub pages](https://pages.github.com/). [The code](https://github.com/zporter/zachporter.dev/) is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the `master` branch and publish from the [`gh-pages` branch](https://github.com/zporter/zachporter.dev/tree/gh-pages). To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new [GitHub Actions](https://github.com/features/actions) to see if I could automate the process after a push to the `master` branch. This article will cover the journey to GitHub Actions along with my takeaways.
 
