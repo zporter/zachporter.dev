@@ -132,92 +132,93 @@
     
 
     <div class="post-content">
-      
-
-<p>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use <a href="https://github.com/edgurgel/httpoison">HTTPoison</a> to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:</p>
-
+      <p>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&rsquo;s specific to the API, I prefer to use <a href="https://github.com/edgurgel/httpoison">HTTPoison</a> to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:</p>
 <ol>
 <li>Only the paths that are used are brought in, alleviating excess code from API implementation that isn&rsquo;t used.</li>
 <li>I have confidence in the level of tests written in the implementation.</li>
 <li>I can easily update the implementation when the API is updated.</li>
 </ol>
-
 <p>HTTPoison makes this super easy for us in Elixir. The library can be used in a couple of different ways.</p>
-
 <h3 id="the-httpoison-module">The HTTPoison Module</h3>
-
 <p>We can use <a href="https://hexdocs.pm/httpoison/HTTPoison.html">the <code>HTTPoison</code> module</a> to issue HTTP requests and parse responses. This is the example from the documentation:</p>
-
-<pre><code class="language-elixir">iex&gt; HTTPoison.get!(&quot;https://api.github.com&quot;)
-%HTTPoison.Response{status_code: 200,
-                    headers: [{&quot;content-type&quot;, &quot;application/json&quot;}],
-                    body: &quot;{...}&quot;}
-</code></pre>
-
-<p>This gives us a very simple way to interface with requests and responses from APIs. My preference, however, is to write a wrapper module using the <code>HTTPoison.Base</code> module.</p>
-
-<h3 id="the-httpoison-base-module">The HTTPoison.Base Module</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir">iex<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">HTTPoison</span><span style="color:#f92672">.</span>get!(<span style="color:#e6db74">&#34;https://api.github.com&#34;</span>)
+%<span style="color:#a6e22e">HTTPoison.Response</span>{<span style="color:#e6db74">status_code</span>: <span style="color:#ae81ff">200</span>,
+                    <span style="color:#e6db74">headers</span>: [{<span style="color:#e6db74">&#34;content-type&#34;</span>, <span style="color:#e6db74">&#34;application/json&#34;</span>}],
+                    <span style="color:#e6db74">body</span>: <span style="color:#e6db74">&#34;{...}&#34;</span>}
+</code></pre></div><p>This gives us a very simple way to interface with requests and responses from APIs. My preference, however, is to write a wrapper module using the <code>HTTPoison.Base</code> module.</p>
+<h3 id="the-httpoisonbase-module">The HTTPoison.Base Module</h3>
 <p>When writing an API wrapper, we can define our own module with a name that corresponds with the API. We can then tell that module to use <a href="https://hexdocs.pm/httpoison/HTTPoison.Base.html">the <code>HTTPoison.Base</code> module</a> and override the functions as required by our specific implementation. Under the hood, the <code>HTTPoison</code> module just uses <code>HTTPoison.Base</code> without overriding any default function.</p>
-
 <p>The following example is an annotated snippet taken from a wrapper that I wrote for <a href="https://www.google.com/recaptcha/intro/">Google&rsquo;s Recaptcha service</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir">defmodule <span style="color:#a6e22e">MyApp.Recaptcha</span> do
+  <span style="color:#a6e22e">@moduledoc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Interface to Google&#39;s Recaptcha service:
+</span><span style="color:#e6db74">  https://www.google.com/recaptcha/intro/index.html
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
 
-<pre><code class="language-elixir">defmodule MyApp.Recaptcha do
-  @moduledoc &quot;&quot;&quot;
-  Interface to Google's Recaptcha service:
-  https://www.google.com/recaptcha/intro/index.html
-  &quot;&quot;&quot;
+  use <span style="color:#a6e22e">HTTPoison.Base</span>
 
-  use HTTPoison.Base
+  <span style="color:#75715e"># Set the endpoint to send requests. There is only one for verifying the site,</span>
+  <span style="color:#75715e"># but this could easily be the base URL to append paths to.</span>
+  <span style="color:#a6e22e">@endpoint</span> <span style="color:#e6db74">&#34;https://www.google.com/recaptcha/api/siteverify&#34;</span>
 
-  # Set the endpoint to send requests. There is only one for verifying the site,
-  # but this could easily be the base URL to append paths to.
-  @endpoint &quot;https://www.google.com/recaptcha/api/siteverify&quot;
-
-  @doc &quot;&quot;&quot;
-  Post given Recaptcha form response to Google.
-
-  Returns `:ok` if successful response. Returns `:error` if anything went wrong.
-  &quot;&quot;&quot;
-  @spec verify(binary) :: :ok | :error
+  <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Post given Recaptcha form response to Google.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  Returns `:ok` if successful response. Returns `:error` if anything went wrong.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+  <span style="color:#a6e22e">@spec</span> verify(binary) <span style="color:#f92672">::</span> <span style="color:#e6db74">:ok</span> <span style="color:#f92672">|</span> <span style="color:#e6db74">:error</span>
   def verify(response) do
-    params = [
-      {&quot;secret&quot;, secret()},
-      {&quot;response&quot;, response}
+    params <span style="color:#f92672">=</span> [
+      {<span style="color:#e6db74">&#34;secret&#34;</span>, secret()},
+      {<span style="color:#e6db74">&#34;response&#34;</span>, response}
     ]
 
-    @endpoint
-    |&gt; post({:form, params})
-    |&gt; process_verify
+    <span style="color:#a6e22e">@endpoint</span>
+    <span style="color:#f92672">|&gt;</span> post({<span style="color:#e6db74">:form</span>, params})
+    <span style="color:#f92672">|&gt;</span> process_verify
   end
 
 
-  # The secret to send with the post request to Google.
-  @spec secret() :: binary
+  <span style="color:#75715e"># The secret to send with the post request to Google.</span>
+  <span style="color:#a6e22e">@spec</span> secret() <span style="color:#f92672">::</span> binary
   defp secret() do
-    System.get_env(&quot;RECAPTCHA_SECRET&quot;)
+    <span style="color:#a6e22e">System</span><span style="color:#f92672">.</span>get_env(<span style="color:#e6db74">&#34;RECAPTCHA_SECRET&#34;</span>)
   end
 
-  @spec process_verify({atom, binary | map}) :: atom
-  defp process_verify({:ok, %{body: %{success: true}}}), do: :ok
-  defp process_verify(_), do: :error
+  <span style="color:#a6e22e">@spec</span> process_verify({atom, binary <span style="color:#f92672">|</span> map}) <span style="color:#f92672">::</span> atom
+  defp process_verify({<span style="color:#e6db74">:ok</span>, %{<span style="color:#e6db74">body</span>: %{<span style="color:#e6db74">success</span>: true}}}), <span style="color:#e6db74">do</span>: <span style="color:#e6db74">:ok</span>
+  defp process_verify(_), <span style="color:#e6db74">do</span>: <span style="color:#e6db74">:error</span>
 
-  # HTTPoison handlers -------------------------------------
-  @spec process_response_body(any) :: binary | %{}
-  defp process_response_body(&quot;&quot;), do: &quot;&quot;
+  <span style="color:#75715e"># HTTPoison handlers -------------------------------------</span>
+  <span style="color:#a6e22e">@spec</span> process_response_body(any) <span style="color:#f92672">::</span> binary <span style="color:#f92672">|</span> %{}
+  defp process_response_body(<span style="color:#e6db74">&#34;&#34;</span>), <span style="color:#e6db74">do</span>: <span style="color:#e6db74">&#34;&#34;</span>
   defp process_response_body(body) do
-    Poison.decode!(body, keys: :atoms)
+    <span style="color:#a6e22e">Poison</span><span style="color:#f92672">.</span>decode!(body, <span style="color:#e6db74">keys</span>: <span style="color:#e6db74">:atoms</span>)
   end
 end
-</code></pre>
-
-<p>Calling <code>MyApp.Recaptcha.verify(&quot;recaptcha_client_token&quot;)</code> will issue a POST request to the <code>@endpoint</code> then process the response in <code>process_verify/1</code>. Here, I&rsquo;ve overridden the <code>process_response_body/1</code> function to use the <a href="https://github.com/devinus/poison">Poison</a> library to decode the response body and return an Elixir Map with atom keys. You can find a list of all overridable functions with examples <a href="https://hexdocs.pm/httpoison/HTTPoison.Base.html#module-overriding-functions">in the HTTPoison documentation</a>.</p>
-
+</code></pre></div><p>Calling <code>MyApp.Recaptcha.verify(&quot;recaptcha_client_token&quot;)</code> will issue a POST request to the <code>@endpoint</code> then process the response in <code>process_verify/1</code>. Here, I&rsquo;ve overridden the <code>process_response_body/1</code> function to use the <a href="https://github.com/devinus/poison">Poison</a> library to decode the response body and return an Elixir Map with atom keys. You can find a list of all overridable functions with examples <a href="https://hexdocs.pm/httpoison/HTTPoison.Base.html#module-overriding-functions">in the HTTPoison documentation</a>.</p>
 <p>This is my preferred approach to interfacing with APIs. I&rsquo;ve written small wrappers for Vimeo, Mailchimp, and Google&rsquo;s Recaptcha (above) to name a few. It&rsquo;s a real easy way to get an API wrapper up and running in Elixir with a minimal amount of code. And I only implement the parts of the API that I use.</p>
-
 <p>Have you used <code>HTTPoison</code>? Interfaced with an API in Elixir another way? Let me know in the comments over <a href="https://news.ycombinator.com/item?id=16116148">on Hacker News</a>.</p>
 
     </div>
+    
+      <div class="pagination">
+        <div class="pagination__title">
+          <span class="pagination__title-h">Read other posts</span>
+          <hr />
+        </div>
+        <div class="pagination__buttons">
+          
+            <span class="button previous">
+              <a href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Publishing a Hugo Site to GitHub Pages via Github Actions</span>
+              </a>
+            </span>
+          
+          
+        </div>
+      </div>
     
 
     
@@ -242,7 +243,7 @@ end
 </a>
 
       <div class="copyright">
-        <span>© 2019</span>
+        <span>© 2020</span>
 
         <div class="social-links">
           

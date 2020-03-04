@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Zach Porter: Software Engineer</title>
@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Zach Porter: Software Engineer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Jan 2018 12:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Tue, 03 Mar 2020 12:00:00 -0500</lastBuildDate>
     
 	<atom:link href="https://zachporter.dev/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Publishing a Hugo Site to GitHub Pages via Github Actions</title>
+      <link>https://zachporter.dev/posts/publishing-hugo-with-github-actions/</link>
+      <pubDate>Tue, 03 Mar 2020 12:00:00 -0500</pubDate>
+      
+      <guid>https://zachporter.dev/posts/publishing-hugo-with-github-actions/</guid>
+      <description>Background As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch.</description>
+    </item>
     
     <item>
       <title>Writing an API Wrapper in Elixir With HTTPoison</title>
