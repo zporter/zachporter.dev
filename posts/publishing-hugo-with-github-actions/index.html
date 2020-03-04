@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     
-      <title>Publishing a Hugo Site to GitHub Pages via Github Actions :: Zach Porter: Software Engineer</title>
+      <title>Publishing a Hugo Site to GitHub Pages via GitHub Actions :: Zach Porter: Software Engineer</title>
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="Background As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch."/>
+<meta name="description" content="As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch."/>
 <meta name="keywords" content="programmer, software engineer, developer"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/" />
@@ -26,13 +26,13 @@
 
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Publishing a Hugo Site to GitHub Pages via Github Actions"/>
-<meta name="twitter:description" content="Background As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch."/>
+<meta name="twitter:title" content="Publishing a Hugo Site to GitHub Pages via GitHub Actions"/>
+<meta name="twitter:description" content="As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch."/>
 
 
 
-<meta property="og:title" content="Publishing a Hugo Site to GitHub Pages via Github Actions" />
-<meta property="og:description" content="Background As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch." />
+<meta property="og:title" content="Publishing a Hugo Site to GitHub Pages via GitHub Actions" />
+<meta property="og:description" content="As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zachporter.dev/posts/publishing-hugo-with-github-actions/" />
 <meta property="article:published_time" content="2020-03-03T12:00:00-05:00" />
@@ -105,7 +105,7 @@
       <div class="content">
         
   <div class="post">
-    <h2 class="post-title"><a href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/">Publishing a Hugo Site to GitHub Pages via Github Actions</a></h2>
+    <h2 class="post-title"><a href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/">Publishing a Hugo Site to GitHub Pages via GitHub Actions</a></h2>
     <div class="post-meta">
       
         <span class="post-date">
@@ -129,8 +129,7 @@
     
 
     <div class="post-content">
-      <h2 id="background">Background</h2>
-<p>As of this writing, I am currently using the <a href="https://gohugo.io/">Hugo</a> static site generator for this site and publishing to <a href="https://pages.github.com/">GitHub pages</a>. <a href="https://github.com/zporter/zachporter.dev/">The code</a> is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the <code>master</code> branch and publish from the <a href="https://github.com/zporter/zachporter.dev/tree/gh-pages"><code>gh-pages</code> branch</a>. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new <a href="https://github.com/features/actions">GitHub Actions</a> to see if I could automate the process after a push to the <code>master</code> branch. This article will cover the journey to GitHub Actions along with my takeaways.</p>
+      <p>As of this writing, I am currently using the <a href="https://gohugo.io/">Hugo</a> static site generator for this site and publishing to <a href="https://pages.github.com/">GitHub pages</a>. <a href="https://github.com/zporter/zachporter.dev/">The code</a> is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the <code>master</code> branch and publish from the <a href="https://github.com/zporter/zachporter.dev/tree/gh-pages"><code>gh-pages</code> branch</a>. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new <a href="https://github.com/features/actions">GitHub Actions</a> to see if I could automate the process after a push to the <code>master</code> branch. This article will cover the journey to GitHub Actions along with my takeaways.</p>
 <h2 id="setup">Setup</h2>
 <p>Getting started with GitHub Actions is pretty straightforward. GitHub provides a great starter template and has some examples in their documentation. There&rsquo;s also <a href="https://github.com/marketplace?type=actions">a marketplace</a> for actions to use or, in my case, use as inspiration to write my own. One downside to the marketplace is that there seems to be quite a bit of legacy code that I can only assume used earlier versions of GitHub Actions. As far as I can tell, GitHub has since changed to using a YAML-formatted file and have changed how variables can be exposed to the workspace as environment variables. The source code of the actions in the Marketplace is pretty easy to read, so you can make a judgement call as to whether you can pull it in or whether you need to roll your own.</p>
 <h2 id="implementation">Implementation</h2>
