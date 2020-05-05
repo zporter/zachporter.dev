@@ -1,7 +1,6 @@
 ---
 title: "Let's Code: Contact Form in Phoenix -- The Schema"
-draft: true
-date: 2020-04-29T12:00:00-05:00
+date: 2020-05-05T12:00:00-05:00
 comments: false
 tags: ["elixir", "phoenix", "ecto"]
 ---
