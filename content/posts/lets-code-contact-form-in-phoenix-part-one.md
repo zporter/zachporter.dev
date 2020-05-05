@@ -8,7 +8,7 @@ tags: ["elixir", "phoenix", "ecto"]
 
 In this _Let's Code_ series, I will be walking through how I added a simple contact form to a [Phoenix](https://www.phoenixframework.org/) 1.4 web application. I will try to make this as general purpose as possible so that it's easier to follow _and_ you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or [a new one](https://hexdocs.pm/phoenix/up_and_running.html#content).
 
-The contact form will take the minimal amount of fields from the user (an email, subject, and a body) and send that information to a support email address. In this post, I will be walking through the schema. Let's get started.
+The contact form will take the minimal amount of fields from the user (an email, subject, and a body) and send that information to a support email address. In this post, I will be walking through the schema used to model the message from the user. Let's get started.
 
 ## Starting with a Type Specification
 
@@ -32,7 +32,7 @@ end
 
 Here, I define a `Support.Message` module to model the user's message. Since this is an internal module to the `Support` context, I specify `@moduledoc false`. [This convention](https://hexdocs.pm/elixir/writing-documentation.html#hiding-internal-modules-and-functions) hides the module from our application's documentation. I typically document modules that are part of the public interface of my application and hide the rest.
 
-The `@type t` convention documents the type this module models. In this case, it's a struct with an `email`, `subject`, and `body` attributes. Simple enough so far. Now, I will add a schema using [the Ecto library](https://hexdocs.pm/ecto/Ecto.html).
+The `@type t` convention documents the type this module models. In this case, it's a struct with an `email`, `subject`, and `body` attributes. Simple enough so far. Note, this module will not compile because a struct has not been defined. Next, I will add a schema using [the Ecto library](https://hexdocs.pm/ecto/Ecto.html) which will give us the struct and allow this module to be compiled.
 
 ## Using Ecto's Embedded Schemas
 
@@ -82,7 +82,7 @@ defmodule MyApp.Support.MessageTest do
 end
 ```
 
-This provides me with a little bit of structure as I begin to fill in the implementation. Working top-down, now I can begin filling in the assertions.
+This provides me with a good structure as I begin to fill in the implementation of the requirements. I will begin with the first test:
 
 ```elixir
 # test/my_app/support/message_test.exs
@@ -105,6 +105,8 @@ I always like to start with the happy path, then follow that up with the failure
 ```elixir
 # lib/my_app/support/message.ex
 
+import Ecto.Changeset
+
 @spec changeset(t, map) :: Ecto.Changeset.t()
 def changeset(%__MODULE__{} = message, fields) when is_map(fields) do
   message
@@ -112,7 +114,9 @@ def changeset(%__MODULE__{} = message, fields) when is_map(fields) do
 end
 ```
 
-Defining a simple changeset function that casts the fields of the message is enough to get the first test to pass. Onto to the next test.
+The `import Ecto.Changeset` line imports all functions from that Ecto module. The function we are using in our `changeset` function is `cast`. I will be using a couple more functions later on.
+
+Defining a simple `changeset` function that casts the fields of the message is enough to get the first test to pass. Onto to the next test.
 
 ```elixir
 # test/my_app/support/message_test.exs
@@ -130,7 +134,7 @@ test "missing required fields" do
 end
 ```
 
-All fields on a message will be required before submitting to a support person. One thing to note with this test that might not be well-known is [the `errors_on` function](https://github.com/phoenixframework/phoenix/blob/cc261a67a83649555841b92c3cbc1df024888cc8/installer/templates/phx_ecto/data_case.ex#L40-L54) provided by a Phoenix Ecto template that's included in your Phoenix project when using Ecto. This helper function uses [Ecto's `traverse_errors` function](https://hexdocs.pm/ecto/Ecto.Changeset.html#traverse_errors/2) to provide a map of errors for a given changeset. I use it here to assert the "can't be blank" message is in each field's set of errors.
+This test is asserting that all fields on a message will be required before submitting to a support person. One thing to note with this test that might not be well-known is [the `errors_on` function](https://github.com/phoenixframework/phoenix/blob/cc261a67a83649555841b92c3cbc1df024888cc8/installer/templates/phx_ecto/data_case.ex#L40-L54) provided by a Phoenix Ecto template that's included in your Phoenix project when using Ecto. This helper function uses [Ecto's `traverse_errors` function](https://hexdocs.pm/ecto/Ecto.Changeset.html#traverse_errors/2) to provide a map of errors for a given changeset. I use it here to assert the "can't be blank" message is in each field's set of errors.
 
 Running this test results in a failure. The code to get this to pass will use [Ecto's `validate_required` function](https://hexdocs.pm/ecto/Ecto.Changeset.html#validate_required/3) like so:
 
@@ -141,11 +145,12 @@ Running this test results in a failure. The code to get this to pass will use [E
 def changeset(%__MODULE__{} = message, fields) when is_map(fields) do
   message
   |> cast(fields, [:email, :subject, :body])
+  # Added this line here
   |> validate_required([:email, :subject, :body])
 end
 ```
 
-Great! So far, I have covered casting the expected fields of the message and validating their presence. Now to the final requirement of validating the format of the given email address.
+Re-running the test now results in success. Fantastic! So far, I have covered casting the expected fields of the message and validating their presence. Now to the final requirement of validating the format of the given email address.
 
 ```elixir
 # test/my_app/support/message_test.exs
@@ -173,11 +178,12 @@ def changeset(%__MODULE__{} = message, fields) when is_map(fields) do
   message
   |> cast(fields, [:email, :subject, :body])
   |> validate_required([:email, :subject, :body])
+  # Added this line here
   |> validate_format(:email, ~r/(.*?)\@\w+\.\w+/)
 end
 ```
 
-Running all the tests again results in success. Now, the changes can be committed to version control, and we can celebrate the conclusion of the first step of adding a contact form to a Phoenix application. 🎉
+Running all the tests again results in success. Now the changes can be committed to version control, and we can celebrate the conclusion of the first step of adding a contact form to a Phoenix application. 🎉
 
 ## The Final Product
 
