@@ -3,33 +3,48 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://zachporter.dev/tags/hugo/</loc>
-    <lastmod>2020-03-03T12:00:00-05:00</lastmod>
+    <loc>https://zachporter.dev/tags/ecto/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/elixir/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/phoenix/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
   </url>
   
   <url>
     <loc>https://zachporter.dev/posts/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/</loc>
+    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/hugo/</loc>
     <lastmod>2020-03-03T12:00:00-05:00</lastmod>
   </url>
   
   <url>
     <loc>https://zachporter.dev/posts/publishing-hugo-with-github-actions/</loc>
     <lastmod>2020-03-03T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/tags/</loc>
-    <lastmod>2020-03-03T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/</loc>
-    <lastmod>2020-03-03T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/tags/elixir/</loc>
-    <lastmod>2018-01-19T12:00:00-05:00</lastmod>
   </url>
   
   <url>
