@@ -10,87 +10,77 @@ In this _Let's Code_ series, I will be walking through how to add a simple conta
 
 [In Part One]({{< ref "lets-code-contact-form-in-phoenix-part-one" >}}) of this series, I started with a `Message` module to serve as the data object for the contact form. The contact form will take the minimal amount of fields from the user (an email, subject, and a body) and send that information to a support email address. In this post, I will be walking through creating a context module to send the feedback. Let's get started.
 
+## TODO: Fill in Outline
 
-## The Final Product (TODO)
+
+## TODO: The Final Product
 
 ```elixir
-# lib/my_app/support/message.ex
+# lib/my_app/support/support.ex
 
-defmodule MyApp.Support.Message do
-  @moduledoc false
+defmodule MyApp.Support do
+  @moduledoc """
+  The `Support` module is responsible for handling customer support requests and
+  delivering them to the appropriate recipients.
+  """
 
-  use Ecto.Schema
-  import Ecto.Changeset
+  alias __MODULE__.Message
 
-  @type t :: %__MODULE__{
-          email: String.t(),
-          subject: String.t(),
-          body: String.t()
-        }
-
-  embedded_schema do
-    field(:email, :string)
-    field(:subject, :string)
-    field(:body, :string)
+  @doc "Builds a `Changeset` for creating a `Message`."
+  @spec new_message(map) :: Ecto.Changeset.t()
+  def new_message(fields \\ %{}) when is_map(fields) do
+    %Message{}
+    |> Message.changeset(fields)
   end
 
-  @spec changeset(t, map) :: Ecto.Changeset.t()
-  def changeset(%__MODULE__{} = message, fields) when is_map(fields) do
-    message
-    |> cast(fields, [:email, :subject, :body])
-    |> validate_required([:email, :subject, :body])
-    |> validate_format(:email, ~r/(.*?)\@\w+\.\w+/)
+  @doc """
+  Sends a `Message` with given `fields`. Valid `fields` are:
+  - `email`
+  - `subject`
+  - `body`
+  """
+  @spec send_message(map) :: {:ok, Message.t()} | {:error, Ecto.Changeset.t()}
+  def send_message(fields) when is_map(fields) do
+    fields
+    |> new_message()
+    |> Ecto.Changeset.apply_action(:insert)
   end
 end
 ```
 
 ```elixir
-# test/my_app/support/message_test.exs
+# test/my_app/support/support_test.exs
 
-defmodule MyApp.Support.MessageTest do
+defmodule MyApp.SupportTest do
   use MyApp.DataCase, async: true
 
-  alias MyApp.Support.Message
+  alias MyApp.Support
 
-  describe "changing a message" do
-    test "with valid fields" do
+  test "new_message/1 is a changeset for a Message" do
+    assert %Ecto.Changeset{data: %Support.Message{}} = Support.new_message()
+  end
+
+  describe "send_message/1" do
+    test "valid fields delivers message" do
       fields = %{
         email: "barry@bluejeans.test",
         subject: "Halp Me",
-        body: "Need bluejean suggestions"
+        body: "I am having problems."
       }
 
-      changeset = Message.changeset(%Message{}, fields)
-
-      assert changeset.valid?
+      assert {:ok, %Support.Message{subject: "Halp Me"} = message} =
+               Support.send_message(fields)
     end
 
-    test "missing required fields" do
-      changeset = Message.changeset(%Message{}, %{})
-
-      refute changeset.valid?
-
-      errors = errors_on(changeset)
-
-      assert "can't be blank" in errors.email
-      assert "can't be blank" in errors.subject
-      assert "can't be blank" in errors.body
-    end
-
-    test "invalid email format" do
-      fields = %{
-        email: "barry@bluejeanstest",
-        subject: "Halp Me",
-        body: "Need bluejean suggestions"
-      }
-
-      cset = Message.changeset(%Message{}, fields)
+    test "invalid fields" do
+      assert {:error, cset} = Support.send_message(%{})
 
       refute cset.valid?
-      assert "has invalid format" in errors_on(cset).email
+      assert "can't be blank" in errors_on(cset).email
     end
   end
 end
 ```
 
+TODO: FIX THIS SIGN-OFF
 In the next post, I will be adding the module and functions for the `Support` context within the application. This new context will use the `Message` created in this post. Thanks for joining me! 👋
