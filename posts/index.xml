@@ -17,7 +17,8 @@
       <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/</guid>
-      <description>In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or a new one.</description>
+      <description>In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address.</description>
     </item>
     
     <item>

@@ -6,7 +6,8 @@
     
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<meta name="description" content="In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or a new one."/>
+<meta name="description" content="In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address."/>
 <meta name="keywords" content="programmer, software engineer, developer"/>
 <meta name="robots" content="noodp"/>
 <link rel="canonical" href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/" />
@@ -27,12 +28,14 @@
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Let&#39;s Code: Contact Form in Phoenix -- The Schema"/>
-<meta name="twitter:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or a new one."/>
+<meta name="twitter:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address."/>
 
 
 
 <meta property="og:title" content="Let&#39;s Code: Contact Form in Phoenix -- The Schema" />
-<meta property="og:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or a new one." />
+<meta property="og:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/" />
 <meta property="article:published_time" content="2020-05-05T12:00:00-05:00" />
@@ -114,7 +117,7 @@
       
       
       
-        <span class="post-read-time">— 7 min read</span>
+        <span class="post-read-time">— 8 min read</span>
       
     </div>
 
@@ -133,11 +136,11 @@
     
 
     <div class="post-content">
-      <p>In this <em>Let&rsquo;s Code</em> series, I will be walking through how I added a simple contact form to a <a href="https://www.phoenixframework.org/">Phoenix</a> 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow <em>and</em> you might be able to take this and apply it in your web applications. I encourage you to follow along, either in an existing Phoenix application or <a href="https://hexdocs.pm/phoenix/up_and_running.html#content">a new one</a>.</p>
-<p>The contact form will take the minimal amount of fields from the user (an email, subject, and a body) and send that information to a support email address. In this post, I will be walking through the schema used to model the message from the user. Let&rsquo;s get started.</p>
+      <p>In this <em>Let&rsquo;s Code</em> series, I will be walking through how I added a simple contact form to a <a href="https://www.phoenixframework.org/">Phoenix</a> 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow <em>and</em> apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or <a href="https://hexdocs.pm/phoenix/up_and_running.html#content">a new one</a>.</p>
+<p>The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address. In this post, I will be walking through the schema used to model the message from the user. Let&rsquo;s get started.</p>
 <h2 id="starting-with-a-type-specification">Starting with a Type Specification</h2>
-<p>I like to start most new features with a <a href="https://hexdocs.pm/elixir/typespecs.html#user-defined-types">type specification</a>. This helps me organization and visualize the data structure(s) that I think I&rsquo;ll need to build the feature. Once defined, I can take this type specification and turn it into <a href="https://hexdocs.pm/elixir/Kernel.html#defstruct/1">an Elixir struct</a> or <a href="https://hexdocs.pm/ecto/Ecto.Schema.html">an Ecto schema</a>.</p>
-<p>In the case of the contact form, a <em>message</em> from the user to the support team sounds like the only type specification I will need. I will begin with a message module nestled under a <code>Support</code> context. If you&rsquo;re unfamiliar with the concept of contexts within Phoenix, I encourage you to read more about them <a href="https://hexdocs.pm/phoenix/contexts.html#content">in the Phoenix guides</a>.</p>
+<p>I like to start most new features with a <a href="https://hexdocs.pm/elixir/typespecs.html#user-defined-types">type specification</a>. This helps me organize and visualize the data structure(s) that I think I&rsquo;ll need to build the feature. Once defined, I can take this type specification and turn it into <a href="https://hexdocs.pm/elixir/Kernel.html#defstruct/1">an Elixir struct</a> or <a href="https://hexdocs.pm/ecto/Ecto.Schema.html">an Ecto schema</a>.</p>
+<p>In the case of the contact form, a <em>message</em> from the user to the support team sounds like the only type specification I will need. I begin with a <code>Message</code> module nestled under a <code>Support</code> context. If you&rsquo;re unfamiliar with the concept of contexts within Phoenix, I encourage you to read more about them <a href="https://hexdocs.pm/phoenix/contexts.html#content">in the Phoenix guides</a>. For now, you can think of the <code>Support</code> context as a boundary and public interface to all support team-related functionality for the application.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
 defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
@@ -149,15 +152,15 @@ defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
           <span style="color:#e6db74">body</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t()
         }
 end
-</code></pre></div><p>Here, I define a <code>Support.Message</code> module to model the user&rsquo;s message. Since this is an internal module to the <code>Support</code> context, I specify <code>@moduledoc false</code>. <a href="https://hexdocs.pm/elixir/writing-documentation.html#hiding-internal-modules-and-functions">This convention</a> hides the module from our application&rsquo;s documentation. I typically document modules that are part of the public interface of my application and hide the rest.</p>
-<p>The <code>@type t</code> convention documents the type this module models. In this case, it&rsquo;s a struct with an <code>email</code>, <code>subject</code>, and <code>body</code> attributes. Simple enough so far. Note, this module will not compile because a struct has not been defined. Next, I will add a schema using <a href="https://hexdocs.pm/ecto/Ecto.html">the Ecto library</a> which will give us the struct and allow this module to be compiled.</p>
+</code></pre></div><p>Here, I define a <code>Support.Message</code> module to model the user&rsquo;s, you guessed it, support message. The structure of this module should contain the email, subject, and body fields. The <code>Message</code> module is an internal module to be used by the <code>Support</code> context only.</p>
+<p>Stepping through the code, I start by specifying <code>@moduledoc false</code>. <a href="https://hexdocs.pm/elixir/writing-documentation.html#hiding-internal-modules-and-functions">This convention</a> hides this internal module from our application&rsquo;s documentation. I typically document modules that are part of the public interface of the application and hide the rest.</p>
+<p>The <code>@type t</code> convention documents the type this module models. In this case, it&rsquo;s a struct of this module, denoted with the <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#__MODULE__/0"><code>__MODULE__</code> convenience function</a>, and containing <code>email</code>, <code>subject</code>, and <code>body</code> attributes. Simple enough so far. Note, this module will not compile because a struct has not been defined. Next, I will add a schema using <a href="https://hexdocs.pm/ecto/Ecto.html">the Ecto library</a> which will give us the struct and allow this module to be compiled.</p>
 <h2 id="using-ectos-embedded-schemas">Using Ecto&rsquo;s Embedded Schemas</h2>
-<p>Since Ecto ships with most Phoenix applications, I use it here to structure my new <code>Message</code>. As mentioned before, Elixir structs are a perfectly viable option. But Ecto provides us with changesets and validations, which I will leverage later. Before that, I need to define the schema.</p>
-<p>Now, this message isn&rsquo;t going to be backed by a database table. The message will be validated and sent in an email message to a support email address. Ecto gives us a nice construct for this: <a href="https://hexdocs.pm/ecto/Ecto.Schema.html#embedded_schema/1">embedded schemas</a>. From the docs:</p>
+<p>Since Ecto ships with most Phoenix applications, I use it here to structure my new <code>Message</code>. Ecto typically deals with manipulating data that will eventually be persisted to a database. However, I won&rsquo;t be storing the message in the database. The message will be validated and sent in an email to a support team. Ecto gives us a nice construct for working with data not intended for the database: <a href="https://hexdocs.pm/ecto/Ecto.Schema.html#embedded_schema/1">embedded schemas</a>. From <a href="https://hexdocs.pm/ecto/data-mapping-and-validation.html#schemas-are-mappers">the Ecto docs</a> which describe schemas as data mappers:</p>
 <blockquote>
-<p>Embedded schemas are defined similarly to source-based schemas. For example, you can use an embedded schema to represent your UI, mapping and validating its inputs, and then you convert such embedded schema to other schemas that are persisted to the database</p>
+<p>We used <code>embedded_schema</code> because it is not our intent to persist it anywhere. With the schema in hand, we can use Ecto changesets and validations to process the data</p>
 </blockquote>
-<p>This fits quite well with my business requirements. I will add one to the <code>Message</code> module:</p>
+<p>I could use an Elixir struct here instead of an Ecto schema. However, Ecto provides changesets and validations to make change tracking and validating input easier than if I had written something from scratch. Even though I do not intend to persist this data to the database, I still want to validate the inputs and track changes to a message. I will add one to the <code>Message</code> module:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
 use <span style="color:#a6e22e">Ecto.Schema</span>
@@ -168,9 +171,9 @@ embedded_schema do
   field(<span style="color:#e6db74">:body</span>, <span style="color:#e6db74">:string</span>)
 end
 </code></pre></div><p>The <code>use Ecto.Schema</code> line brings in the macro support for related functions. The function I use from this macro is <code>embedded_schema</code>. Within that function, I add the fields from the typespec defined earlier: <code>email</code>, <code>subject</code>, and <code>body</code>.</p>
-<p>This is shaping up quite nicely. So far, I&rsquo;ve added our typespec for documentation and reference, and an embedded schema for the structure. Now it&rsquo;s time to work with messages via <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#content">Ecto changesets</a>.</p>
+<p>With this schema, the module compiles. Yay! So far, I&rsquo;ve added the typespec for documentation and reference, and an embedded schema for the structure. Now it&rsquo;s time to work with messages via <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#content">Ecto changesets</a>.</p>
 <h2 id="defining-a-changeset">Defining a Changeset</h2>
-<p>Before getting straight into defining a changeset, I like to take this time to stub out desired change functionality with some tests. I&rsquo;ll define a test in <code>test/my_app/support/message_test.exs</code> and begin with an outline of functionality that I would like tested.</p>
+<p>Before getting straight into defining a changeset, I like to take this time to stub out desired functionality with some tests. I&rsquo;ll define a test in <code>test/my_app/support/message_test.exs</code> and begin with an outline of functionality that I would like tested.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
 defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
@@ -186,7 +189,7 @@ defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
     test <span style="color:#e6db74">&#34;invalid email format&#34;</span>
   end
 end
-</code></pre></div><p>This provides me with a good structure as I begin to fill in the implementation of the requirements. I will begin with the first test:</p>
+</code></pre></div><p>This provides me with a good structure as I begin to fill in the implementation of the requirements. I have a <code>describe</code> block for tracking changes to a new or existing message. Within that <code>describe</code> block are three pending tests for each use-case that cover changing a message with valid and invalid inputs. I will begin with the first test:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
 test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
@@ -205,13 +208,14 @@ end
 
 import <span style="color:#a6e22e">Ecto.Changeset</span>
 
-<span style="color:#a6e22e">@spec</span> changeset(t, map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+<span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
 def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
   message
   <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
 end
-</code></pre></div><p>The <code>import Ecto.Changeset</code> line imports all functions from that Ecto module. The function we are using in our <code>changeset</code> function is <code>cast</code>. I will be using a couple more functions later on.</p>
-<p>Defining a simple <code>changeset</code> function that casts the fields of the message is enough to get the first test to pass. Onto to the next test.</p>
+</code></pre></div><p>The <code>import Ecto.Changeset</code> line imports all functions from that Ecto module. The function we are using in our <code>changeset</code> function is <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#cast/4"><code>cast</code></a>, which takes the <code>fields</code> as changes for the <code>message</code> based on the given set of permitted attributes: <code>:email</code>, <code>:subject</code>, and <code>:body</code>. I will be using a couple more functions later on, which is why I&rsquo;m importing them all.</p>
+<p>The typespec, defined as <code>@spec changeset(t(), map) :: Ecto.Changeset.t()</code>, documents that the <code>changeset</code> function takes two arguments and returns an <code>Ecto.Changeset</code> struct. The first argument uses the <code>@type t</code> definition above, specifying that it should be a <code>Message</code> struct. The second argument specifies it should be an Elixir <code>map</code>.</p>
+<p>Defining a simple <code>changeset</code> function that casts the expected fields of the message is enough to get the first test to pass. Onto to the next test.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
 test <span style="color:#e6db74">&#34;missing required fields&#34;</span> do
@@ -225,18 +229,18 @@ test <span style="color:#e6db74">&#34;missing required fields&#34;</span> do
   assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>subject
   assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>body
 end
-</code></pre></div><p>This test is asserting that all fields on a message will be required before submitting to a support person. One thing to note with this test that might not be well-known is <a href="https://github.com/phoenixframework/phoenix/blob/cc261a67a83649555841b92c3cbc1df024888cc8/installer/templates/phx_ecto/data_case.ex#L40-L54">the <code>errors_on</code> function</a> provided by a Phoenix Ecto template that&rsquo;s included in your Phoenix project when using Ecto. This helper function uses <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#traverse_errors/2">Ecto&rsquo;s <code>traverse_errors</code> function</a> to provide a map of errors for a given changeset. I use it here to assert the &ldquo;can&rsquo;t be blank&rdquo; message is in each field&rsquo;s set of errors.</p>
+</code></pre></div><p>This test is asserting that all fields on a message will be required before submitting to the support team. One thing to note with this test that might not be well-known is <a href="https://github.com/phoenixframework/phoenix/blob/cc261a67a83649555841b92c3cbc1df024888cc8/installer/templates/phx_ecto/data_case.ex#L40-L54">the <code>errors_on</code> function</a> provided by a Phoenix Ecto template that&rsquo;s included in your Phoenix project when using Ecto. This helper function uses <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#traverse_errors/2">Ecto&rsquo;s <code>traverse_errors</code> function</a> to provide a map of errors for a given changeset. I use it here to assert the &ldquo;can&rsquo;t be blank&rdquo; message is in each field&rsquo;s set of errors.</p>
 <p>Running this test results in a failure. The code to get this to pass will use <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#validate_required/3">Ecto&rsquo;s <code>validate_required</code> function</a> like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-<span style="color:#a6e22e">@spec</span> changeset(t, map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+<span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
 def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
   message
   <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
   <span style="color:#75715e"># Added this line here</span>
   <span style="color:#f92672">|&gt;</span> validate_required([<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
 end
-</code></pre></div><p>Re-running the test now results in success. Fantastic! So far, I have covered casting the expected fields of the message and validating their presence. Now to the final requirement of validating the format of the given email address.</p>
+</code></pre></div><p>Re-running the test results in success. Fantastic! So far, I have covered casting the expected fields of the message and validating their presence. The last test covers validating the format of the message&rsquo;s email address.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
 test <span style="color:#e6db74">&#34;invalid email format&#34;</span> do
@@ -283,7 +287,7 @@ defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
     field(<span style="color:#e6db74">:body</span>, <span style="color:#e6db74">:string</span>)
   end
 
-  <span style="color:#a6e22e">@spec</span> changeset(t, map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+  <span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
   def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
     message
     <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
@@ -337,7 +341,9 @@ defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
     end
   end
 end
-</code></pre></div><p>In the next post, I will be adding the module and functions for the <code>Support</code> context within the application. This new context will use the <code>Message</code> created in this post. Thanks for joining me! 👋</p>
+</code></pre></div><p>In the next post, I will be adding the module and functions for the <code>Support</code> context within the application. This context will use the <code>Message</code> and <code>changeset</code> function created in this post to track and validate inputs from the user as well as send an email to the support team. Thanks for joining me! 👋</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>I would like to thank <a href="https://tmr08c.github.io/">Troy Rosenberg</a> and <a href="https://medium.com/@katestudwell">Kate Studwell</a> for their feedback on earlier drafts of this post. 🙇‍♂️🙏</p>
 
     </div>
     
