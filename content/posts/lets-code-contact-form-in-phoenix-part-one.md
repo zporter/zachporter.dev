@@ -268,7 +268,7 @@ defmodule MyApp.Support.MessageTest do
 end
 ```
 
-In the next post, I will be adding the module and functions for the `Support` context within the application. This context will use the `Message` and `changeset` function created in this post to track and validate inputs from the user as well as send an email to the support team. Thanks for joining me! 👋
+In the next post, I will be adding the module and functions for the `Support` context within the application. This context will use the `Message` and `changeset` function created in this post to track and validate inputs from the user as well as send an email to the support team. If you have any questions or would like to discuss anything you saw here, feel free to comment over [on Hacker News](https://news.ycombinator.com/item?id=23228070). Thanks for joining me! 👋
 
 ## Acknowledgements
 
