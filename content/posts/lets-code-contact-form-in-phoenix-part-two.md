@@ -23,6 +23,8 @@ In true Test-Driven Development (TDD) fashion, I can begin with a test file for 
 
 defmodule MyApp.SupportTest do
   # The `DataCase` module ships with a standard Phoenix app.
+  # See the docs for more info:
+  # https://hexdocs.pm/phoenix/testing_contexts.html#the-datacase
   #
   # The `async: true` option allows the tests in this file to run concurrently
   # with other tests in the application. Tests in this file still run serially.
@@ -58,7 +60,7 @@ defmodule MyApp.Support do
   alias __MODULE__.Message
 
   @doc """
-  Returns a changeset for a Support Message.
+  Returns a changeset for a `Support.Message`.
   """
   @spec change_message() :: Ecto.Changeset.t()
   def change_message do
@@ -103,7 +105,7 @@ Here, I added a new `describe` block for testing the functionality of sending a 
 Running the tests results in the following failure:
 
 ```
-** (UndefinedFunctionError) function LearnU.Support.send_message/1 is undefined or private
+** (UndefinedFunctionError) function MyApp.Support.send_message/1 is undefined or private
 ```
 
 I'm missing the `send_message` function. I can open up the `MyApp.Support` module again and add the following definition of the function to the bottom:
@@ -131,7 +133,27 @@ defmodule MyApp.Support do
 end
 ```
 
-Here, I have built a new `Message` changeset with the given `fields`, then passed that into [`Ecto.Changeset.apply_action/2`](https://hexdocs.pm/ecto/Ecto.Changeset.html#apply_action/2). I used `apply_action` here because the data is not being persisted to a database. This function will simply apply the changes and return the `:ok` tuple when the changes are valid. Otherwise, the function returns the `:error` tuple when the changes are invalid. Re-running the tests result in success.
+The `send_message` function takes a `map` of fields and returns either an `:ok` tuple with the `Message` struct or an `:error` tuple with a changeset. The `is_map` [guard clause](https://hexdocs.pm/elixir/Kernel.html#module-guards) used here prevents a programmer using this interface from passing anything other than a `map` into this function. If something other than a `map` is passed in, the programmer is greeted with this error:
+
+```
+iex(1)> MyApp.Support.send_message("oops")
+** (FunctionClauseError) no function clause matching in MyApp.Support.send_message/1
+
+    The following arguments were given to MyApp.Support.send_message/1:
+
+        # 1
+        "oops"
+
+    Attempted function clauses (showing 1 out of 1):
+
+        def send_message(fields) when is_map(fields)
+
+    (my_app 0.1.0) lib/my_app/support.ex:29: MyApp.Support.send_message/1
+```
+
+This should give the programmer enough information to correct the error. I typically add guard clauses like this to my public interface modules to catch issues early in development before they creep out into production.
+
+The meat of the `send_message` function builds a new `Message` changeset with the given `fields`, then passes the changeset into [`Ecto.Changeset.apply_action/2`](https://hexdocs.pm/ecto/Ecto.Changeset.html#apply_action/2). I used `apply_action` here because the data is not being persisted to a database. This function will simply apply the changes and return the `:ok` tuple when the changes are valid. Otherwise, the function returns the `:error` tuple when the changes are invalid. I am keeping the implementation simple for now. The actual email sending of the message to the support team will come later, because it's a bit more involved. Re-running the tests result in success.
 
 ## Refactoring
 
@@ -165,7 +187,7 @@ Re-running the tests should result in success. Let's take a step back now and re
 ```elixir
 # lib/my_app/support.ex
 
-defmodule LearnU.Support do
+defmodule MyApp.Support do
   @moduledoc """
   The Support module is the interface to customer support for the application.
   Look to this module when you want to provide support to application users.
@@ -204,10 +226,10 @@ end
 ```elixir
 # test/my_app/support_test.exs
 
-defmodule LearnU.SupportTest do
-  use LearnU.DataCase, async: true
+defmodule MyApp.SupportTest do
+  use MyApp.DataCase, async: true
 
-  alias LearnU.Support
+  alias MyApp.Support
 
   test "changing a message" do
     assert %Ecto.Changeset{data: %Support.Message{}} = Support.change_message()
