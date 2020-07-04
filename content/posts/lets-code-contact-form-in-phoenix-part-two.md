@@ -1,6 +1,8 @@
 ---
 title: "Let's Code: Contact Form in Phoenix -- The Bounded Context"
 date: 2020-05-06T12:00:00-05:00
+cover: "/covers/markus-winkler-J2N4mtWcRec-unsplash.jpg"
+coverCredit: "Photo by [Markus Winkler](https://unsplash.com/@markuswinkler?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
 draft: true
 comments: false
 tags: ["elixir", "phoenix"]
