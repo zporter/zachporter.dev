@@ -1,5 +1,3 @@
-.logo {
-  &__cursor {
-    background: #13747D;
-  }
+.logo__cursor {
+  background-color: #13747D;
 }
