@@ -104,14 +104,22 @@
 
       <div class="content">
         
+  
+  
+
   <div class="post">
-    <h2 class="post-title"><a href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/">Publishing a Hugo Site to GitHub Pages via GitHub Actions</a></h2>
+    <h1 class="post-title"><a href="https://zachporter.dev/posts/publishing-hugo-with-github-actions/">Publishing a Hugo Site to GitHub Pages via GitHub Actions</a></h1>
     <div class="post-meta">
       
         <span class="post-date">
-            2020-03-03
+          2020-03-03
         </span>
+
+        
+          
+        
       
+
       
       
         <span class="post-read-time">— 7 min read</span>
@@ -129,6 +137,7 @@
     
 
     <div class="post-content">
+      
       <p>As of this writing, I am currently using the <a href="https://gohugo.io/">Hugo</a> static site generator for this site and publishing to <a href="https://pages.github.com/">GitHub pages</a>. <a href="https://github.com/zporter/zachporter.dev/">The code</a> is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the <code>master</code> branch and publish from the <a href="https://github.com/zporter/zachporter.dev/tree/gh-pages"><code>gh-pages</code> branch</a>. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new <a href="https://github.com/features/actions">GitHub Actions</a> to see if I could automate the process after a push to the <code>master</code> branch. This article will cover the journey to GitHub Actions along with my takeaways.</p>
 <h2 id="setup">Setup</h2>
 <p>Getting started with GitHub Actions is pretty straightforward. GitHub provides a great starter template and has some examples in their documentation. There&rsquo;s also <a href="https://github.com/marketplace?type=actions">a marketplace</a> for actions to use or, in my case, use as inspiration to write my own. One downside to the marketplace is that there seems to be quite a bit of legacy code that I can only assume used earlier versions of GitHub Actions. As far as I can tell, GitHub has since changed to using a YAML-formatted file and have changed how variables can be exposed to the workspace as environment variables. The source code of the actions in the Marketplace is pretty easy to read, so you can make a judgement call as to whether you can pull it in or whether you need to roll your own.</p>
@@ -256,32 +265,40 @@ git push -f <span style="color:#e6db74">${</span>REPOSITORY<span style="color:#6
 
     </div>
     
-      <div class="pagination">
-        <div class="pagination__title">
-          <span class="pagination__title-h">Read other posts</span>
-          <hr />
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+              <span class="button previous">
+                <a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/">
+                  <span class="button__icon">←</span>
+                  <span class="button__text">Let&#39;s Code: Contact Form in Phoenix -- The Schema</span>
+                </a>
+              </span>
+            
+            
+              <span class="button next">
+                <a href="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/">
+                  <span class="button__text">Writing an API Wrapper in Elixir With HTTPoison</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
         </div>
-        <div class="pagination__buttons">
-          
-            <span class="button previous">
-              <a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/">
-                <span class="button__icon">←</span>
-                <span class="button__text">Let&#39;s Code: Contact Form in Phoenix -- The Schema</span>
-              </a>
-            </span>
-          
-          
-            <span class="button next">
-              <a href="https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/">
-                <span class="button__text">Writing an API Wrapper in Elixir With HTTPoison</span>
-                <span class="button__icon">→</span>
-              </a>
-            </span>
-          
-        </div>
-      </div>
+      
     
 
+
+    
+      
+        
+
+      
     
 
     </div>

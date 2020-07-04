@@ -2,6 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Zach Porter: Software Engineer</title>
+    
+    
+    
     <link>https://zachporter.dev/</link>
     <description>Recent content on Zach Porter: Software Engineer</description>
     <generator>Hugo -- gohugo.io</generator>
@@ -17,8 +20,19 @@
       <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/</guid>
-      <description>In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
-The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address.</description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+The contact form will take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address.
+          
+        
+        </description>
     </item>
     
     <item>
@@ -27,7 +41,18 @@ The contact form will take the minimal number of fields from the user (email, su
       <pubDate>Tue, 03 Mar 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/posts/publishing-hugo-with-github-actions/</guid>
-      <description>As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch.</description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          As of this writing, I am currently using the Hugo static site generator for this site and publishing to GitHub pages. The code is open-source on GitHub. To organize the code, I like to keep the Hugo source files in the master branch and publish from the gh-pages branch. To publish the site, I use a script that I can run locally, but I wanted to check out the relatively new GitHub Actions to see if I could automate the process after a push to the master branch.
+          
+        
+        </description>
     </item>
     
     <item>
@@ -36,8 +61,19 @@ The contact form will take the minimal number of fields from the user (email, su
       <pubDate>Fri, 19 Jan 2018 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/posts/writing-an-api-wrapper-in-elixir-with-httpoison/</guid>
-      <description>As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&amp;rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
- Only the paths that are used are brought in, alleviating excess code from API implementation that isn&amp;rsquo;t used.</description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          As developers, we often have to interface with third-party APIs. This is no different when writing Elixir apps. Rather than pulling in some third-party library that&amp;rsquo;s specific to the API, I prefer to use HTTPoison to give me the minimal amount of functionality to write my own wrapper. I prefer to own the API implementation for a few reasons:
+ Only the paths that are used are brought in, alleviating excess code from API implementation that isn&amp;rsquo;t used.
+          
+        
+        </description>
     </item>
     
     <item>
@@ -46,7 +82,17 @@ The contact form will take the minimal number of fields from the user (email, su
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://zachporter.dev/about/</guid>
-      <description>I have been in software development for over a decade working on a variety of solutions, starting with a Windows desktop application and eventually transitioning onto the web. I have worked with a variety of businesses ranging from startups all the way to big brands. Software I have worked on includes anything from small internal applications to large e-commerce solutions to large data transformation (ETL) pipelines. I have built production systems in a variety of languages and frameworks including Ruby / Rails, Python, and, more recently, Elixir and Erlang.</description>
+      <description>
+        
+          &lt;img src=&#34;https://zachporter.dev/about/cover.jpg&#34;/&gt;
+          
+        
+        
+        
+          I have been in software development for over a decade working on a variety of solutions, starting with a Windows desktop application and eventually transitioning onto the web. I have worked with a variety of businesses ranging from startups all the way to big brands. Software I have worked on includes anything from small internal applications to large e-commerce solutions to large data transformation (ETL) pipelines. I have built production systems in a variety of languages and frameworks including Ruby / Rails, Python, and, more recently, Elixir and Erlang.
+          
+        
+        </description>
     </item>
     
   </channel>

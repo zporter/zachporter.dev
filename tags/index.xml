@@ -2,6 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Zach Porter: Software Engineer</title>
+    
+    
+    
     <link>https://zachporter.dev/tags/</link>
     <description>Recent content in Tags on Zach Porter: Software Engineer</description>
     <generator>Hugo -- gohugo.io</generator>
@@ -17,7 +20,18 @@
       <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/ecto/</guid>
-      <description></description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          
+          
+        
+        </description>
     </item>
     
     <item>
@@ -26,7 +40,18 @@
       <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/elixir/</guid>
-      <description></description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          
+          
+        
+        </description>
     </item>
     
     <item>
@@ -35,7 +60,18 @@
       <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/phoenix/</guid>
-      <description></description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          
+          
+        
+        </description>
     </item>
     
     <item>
@@ -44,7 +80,18 @@
       <pubDate>Tue, 03 Mar 2020 12:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/hugo/</guid>
-      <description></description>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          
+          
+        
+        </description>
     </item>
     
   </channel>
