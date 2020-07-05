@@ -1,6 +1,6 @@
 ---
-title: "Let's Code: Contact Form in Phoenix -- The Bounded Context"
-date: 2020-05-06T12:00:00-05:00
+title: "Let's Code: Contact Form in Phoenix - The Public Interface"
+date: 2020-07-05T00:00:00-05:00
 cover: "/covers/markus-winkler-J2N4mtWcRec-unsplash.jpg"
 coverCredit: "Photo by [Markus Winkler](https://unsplash.com/@markuswinkler?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
 draft: true
@@ -8,9 +8,9 @@ comments: false
 tags: ["elixir", "phoenix"]
 ---
 
-In this _Let's Code_ series, I will be walking through how I added a simple contact form to a [Phoenix](https://www.phoenixframework.org/) 1.4 web application. I will try to make this as general purpose as possible so that it's easier to follow _and_ apply to your Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or [a new one](https://hexdocs.pm/phoenix/up_and_running.html#content).
+In this _Let's Code_ series, I will be walking through how I added a simple contact form to a [Phoenix](https://www.phoenixframework.org/) 1.4 web application. I will try to make this as general purpose as possible so that it's easier to follow _and_ apply to your own Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or [a new one](https://hexdocs.pm/phoenix/up_and_running.html#content).
 
-[In Part One]({{< ref "lets-code-contact-form-in-phoenix-part-one" >}}) of this series, I started with a `Message` module to serve as the data object for the contact form. The contact form should take the minimal number of fields from the user (email, subject, and body) and send that information to a support email address. In this post, I will be walking through creating a module to send the feedback. Let's get started.
+[In Part One]({{< ref "lets-code-contact-form-in-phoenix-part-one" >}}) of this series, I started with a `Message` module to serve as the data object for the contact form. In that post, I described the contact form as taking the minimal number of fields from the user (email, subject, and body) and sending that information to a support email address. In this post, I will be walking through creating a module to send the feedback. Let's get started.
 
 ## The Support Interface
 
@@ -36,6 +36,9 @@ defmodule MyApp.SupportTest do
 
   test "changing a message" do
     # `Support.change_message/1` is expected to return a Changeset for a Message.
+    #
+    # I'm using pattern-matching here to assert the returned data types as
+    # opposed to looking for specific values.
     assert %Ecto.Changeset{data: %Support.Message{}} = Support.change_message()
   end
 end
@@ -93,16 +96,16 @@ defmodule MyApp.SupportTest do
     end
 
     test "with invalid fields" do
-      assert {:error, cset} = Support.send_message(%{})
+      assert {:error, changeset} = Support.send_message(%{})
 
-      refute cset.valid?
-      assert "can't be blank" in errors_on(cset).email
+      refute changeset.valid?
+      assert "can't be blank" in errors_on(changeset).email
     end
   end
 end
 ```
 
-Here, I added a new `describe` block for testing the functionality of sending a message. This block has two tests: one for a successful message send and one for a failed message send. Successfully sending a message results in an `:ok` tuple response with a sent message. Failing to send a message returns an `:error` tuple with a changeset.
+Here, I added a new `describe` block for testing the functionality of sending a message. This block has two tests: one for a successful message send and one for a failed message send. Successfully sending a message results in an `:ok` tuple response with a sent message. Failing to send a message returns an `:error` tuple with a changeset. This is [a standard way](https://elixirschool.com/en/lessons/advanced/error-handling/#general-conventions) of writing functions with error handling in Elixir.
 
 Running the tests results in the following failure:
 
@@ -252,13 +255,23 @@ defmodule MyApp.SupportTest do
     end
 
     test "with invalid fields" do
-      assert {:error, cset} = Support.send_message(%{})
+      assert {:error, changeset} = Support.send_message(%{})
 
-      refute cset.valid?
-      assert "can't be blank" in errors_on(cset).email
+      refute changeset.valid?
+      assert "can't be blank" in errors_on(changeset).email
     end
   end
 end
 ```
 
-This post covered the foundation of the public interface for the `Support` domain of the Elixir application. I created the functions to change and send a message, but have not implemented the actual sending of an email to the support team. I will cover this in the next installment of this Let's Code series. Thanks for joining me! 👋
+## Wrap-Up
+
+This post laid the foundation of the public interface for the `Support` domain with functions to change and send a message. In this post, I covered:
+
+- What kind of functions go on a public interface.
+- Setting up tests to run concurrently with other tests in the application.
+- Following error handling conventions with ok and error tuple responses.
+- Using guard clauses on a public interface to catch errors in development.
+- Refactoring a tiny bit of duplication using function composition.
+
+This post did not handle the actual sending of an email to the support team. This functionality is quite involved and will make for a good next installment of this Let's Code series. Thanks for joining me! 👋
