@@ -1,9 +1,8 @@
 ---
 title: "Let's Code: Contact Form in Phoenix - The Public Interface"
-date: 2020-07-05T00:00:00-05:00
+date: 2020-07-09T00:00:00-05:00
 cover: "/covers/markus-winkler-J2N4mtWcRec-unsplash.jpg"
-coverCredit: "Photo by [Markus Winkler](https://unsplash.com/@markuswinkler?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
-draft: true
+coverCaption: "Photo by [Markus Winkler](https://unsplash.com/@markuswinkler?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)"
 comments: false
 tags: ["elixir", "phoenix"]
 ---
@@ -268,7 +267,7 @@ end
 
 This post laid the foundation of the public interface for the `Support` domain with functions to change and send a message. In this post, I covered:
 
-- What kind of functions go on a public interface.
+- What kind of functions go on a public interface module.
 - Setting up tests to run concurrently with other tests in the application.
 - Following error handling conventions with ok and error tuple responses.
 - Using guard clauses on a public interface to catch errors in development.
