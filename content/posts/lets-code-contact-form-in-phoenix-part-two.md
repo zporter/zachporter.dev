@@ -274,3 +274,7 @@ This post laid the foundation of the public interface for the `Support` domain w
 - Refactoring a tiny bit of duplication using function composition.
 
 This post did not handle the actual sending of an email to the support team. This functionality is quite involved and will make for a good next installment of this Let's Code series. Thanks for joining me! 👋
+
+## Acknowledgements
+
+I would like to thank [Troy Rosenberg](https://tmr08c.github.io/) and [Kate Studwell](https://medium.com/@katestudwell) for their feedback on earlier drafts of this post. 🙇‍♂️🙏
