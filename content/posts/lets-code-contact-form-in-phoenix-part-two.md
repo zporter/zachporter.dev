@@ -13,7 +13,7 @@ In this _Let's Code_ series, I will be walking through how I added a simple cont
 
 ## The Support Interface
 
-For the purposes of a contact form, I know I will need to allow an end user to modify and submit a message to the support team. With that, I can determine two functions: `change_message` and `send_message`. The `change_message` function will be used to represent and validate the data on the form while the `send_message` function will be used to send an email to the support team with the contents of the message. But where do these functions live?
+For the purposes of a contact form, I know I will need to allow an end user to modify and submit a message to the support team. With that, I can make out two functions: `change_message` and `send_message`. The `change_message` function will be used to represent and validate the data on the form while the `send_message` function will be used to send an email to the support team with the contents of the message. But where do these functions live?
 
 As mentioned in the [previous post]({{< ref "lets-code-contact-form-in-phoenix-part-one" >}}), the Phoenix guides encourage defining [context modules](https://hexdocs.pm/phoenix/contexts.html#content) or public interfaces as a boundary around a specific domain of an application. The `Support` context will be the boundary and public interface for the Support domain in this application. Functions on this public interface can be called from other interfaces such as a Phoenix controller or an IEx session.
 
@@ -269,7 +269,7 @@ This post laid the foundation of the public interface for the `Support` domain w
 
 - What kind of functions go on a public interface module.
 - Setting up tests to run concurrently with other tests in the application.
-- Following error handling conventions with ok and error tuple responses.
+- Following error handling conventions with `:ok` and `:error` tuple responses.
 - Using guard clauses on a public interface to catch errors in development.
 - Refactoring a tiny bit of duplication using function composition.
 
