@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+      <title>Let&#39;s Code: Contact Form in Phoenix - The Public Interface :: Zach Porter: Software Engineer</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="In this Let&amp;rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&amp;rsquo;s easier to follow and apply to your own Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+In Part One of this series, I started with a Message module to serve as the data object for the contact form."/>
+<meta name="keywords" content="programmer, software engineer, developer"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-two/" />
+
+
+
+
+
+<link rel="stylesheet" href="https://zachporter.dev/assets/style.css">
+
+
+<link rel="stylesheet" href="https://zachporter.dev/style.css">
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://zachporter.dev/img/apple-touch-icon-144-precomposed.png">
+<link rel="shortcut icon" href="https://zachporter.dev/img/favicon.png">
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Let&#39;s Code: Contact Form in Phoenix - The Public Interface"/>
+<meta name="twitter:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and apply to your own Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+In Part One of this series, I started with a Message module to serve as the data object for the contact form."/>
+
+
+
+<meta property="og:title" content="Let&#39;s Code: Contact Form in Phoenix - The Public Interface" />
+<meta property="og:description" content="In this Let&rsquo;s Code series, I will be walking through how I added a simple contact form to a Phoenix 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow and apply to your own Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or a new one.
+In Part One of this series, I started with a Message module to serve as the data object for the contact form." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-two/" />
+<meta property="article:published_time" content="2020-07-09T00:00:00-05:00" />
+<meta property="article:modified_time" content="2020-07-09T00:00:00-05:00" />
+
+
+
+
+
+
+  </head>
+  <body class="dark-theme">
+    <div class="container">
+      <header class="header">
+  <span class="header__inner">
+    <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">zachporter.dev</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+    <span class="header__right">
+      
+        <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+      
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+  </ul>
+</nav>
+
+        <span class="menu-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </span>
+      
+      <span class="theme-toggle">
+        <svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22 41C32.4934 41 41 32.4934 41 22C41 11.5066 32.4934 3 22
+  3C11.5066 3 3 11.5066 3 22C3 32.4934 11.5066 41 22 41ZM7 22C7
+  13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22Z"/>
+</svg>
+
+      </span>
+    </span>
+  </span>
+</header>
+
+
+      <div class="content">
+        
+  
+  
+
+  <div class="post">
+    <h1 class="post-title"><a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-two/">Let&rsquo;s Code: Contact Form in Phoenix - The Public Interface</a></h1>
+    <div class="post-meta">
+      
+        <span class="post-date">
+          2020-07-09
+        </span>
+
+        
+          
+        
+      
+
+      
+      
+        <span class="post-read-time">— 8 min read</span>
+      
+    </div>
+
+    
+      <span class="post-tags">
+        
+          #<a href="https://zachporter.dev/tags/elixir/">elixir</a>&nbsp;
+        
+          #<a href="https://zachporter.dev/tags/phoenix/">phoenix</a>&nbsp;
+        
+      </span>
+    
+
+    
+      <figure class="post-cover">
+        
+          <img src="https://zachporter.dev/covers/markus-winkler-J2N4mtWcRec-unsplash.jpg" />
+        
+
+        
+          <figcaption class="center">Photo by <a href="https://unsplash.com/@markuswinkler?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Markus Winkler</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></figcaption>
+        
+      </figure>
+    
+
+    <div class="post-content">
+      
+      <p>In this <em>Let&rsquo;s Code</em> series, I will be walking through how I added a simple contact form to a <a href="https://www.phoenixframework.org/">Phoenix</a> 1.4 web application. I will try to make this as general purpose as possible so that it&rsquo;s easier to follow <em>and</em> apply to your own Phoenix applications. I encourage you to follow along, either in an existing Phoenix application or <a href="https://hexdocs.pm/phoenix/up_and_running.html#content">a new one</a>.</p>
+<p><a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/">In Part One</a> of this series, I started with a <code>Message</code> module to serve as the data object for the contact form. In that post, I described the contact form as taking the minimal number of fields from the user (email, subject, and body) and sending that information to a support email address. In this post, I will be walking through creating a module to send the feedback. Let&rsquo;s get started.</p>
+<h2 id="the-support-interface">The Support Interface</h2>
+<p>For the purposes of a contact form, I know I will need to allow an end user to modify and submit a message to the support team. With that, I can make out two functions: <code>change_message</code> and <code>send_message</code>. The <code>change_message</code> function will be used to represent and validate the data on the form while the <code>send_message</code> function will be used to send an email to the support team with the contents of the message. But where do these functions live?</p>
+<p>As mentioned in the <a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/">previous post</a>, the Phoenix guides encourage defining <a href="https://hexdocs.pm/phoenix/contexts.html#content">context modules</a> or public interfaces as a boundary around a specific domain of an application. The <code>Support</code> context will be the boundary and public interface for the Support domain in this application. Functions on this public interface can be called from other interfaces such as a Phoenix controller or an IEx session.</p>
+<p>In true Test-Driven Development (TDD) fashion, I can begin with a test file for this new module and functions:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
+
+defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
+  <span style="color:#75715e"># The `DataCase` module ships with a standard Phoenix app.</span>
+  <span style="color:#75715e"># See the docs for more info:</span>
+  <span style="color:#75715e"># https://hexdocs.pm/phoenix/testing_contexts.html#the-datacase</span>
+  <span style="color:#75715e">#</span>
+  <span style="color:#75715e"># The `async: true` option allows the tests in this file to run concurrently</span>
+  <span style="color:#75715e"># with other tests in the application. Tests in this file still run serially.</span>
+  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+
+  alias <span style="color:#a6e22e">MyApp.Support</span>
+
+  test <span style="color:#e6db74">&#34;changing a message&#34;</span> do
+    <span style="color:#75715e"># `Support.change_message/1` is expected to return a Changeset for a Message.</span>
+    <span style="color:#75715e">#</span>
+    <span style="color:#75715e"># I&#39;m using pattern-matching here to assert the returned data types as</span>
+    <span style="color:#75715e"># opposed to looking for specific values.</span>
+    assert %<span style="color:#a6e22e">Ecto.Changeset</span>{<span style="color:#e6db74">data</span>: %<span style="color:#a6e22e">Support.Message</span>{}} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>change_message()
+  end
+end
+</code></pre></div><p>Running this test results in the following failure:</p>
+<pre><code>** (UndefinedFunctionError) function MyApp.Support.change_message/0 is undefined (module MyApp.Support is not available)`
+</code></pre><p>This is stating that not only are we missing the <code>change_message</code> function, but the <code>MyApp.Support</code> module doesn&rsquo;t even exist. Let&rsquo;s fix that by creating the <code>Support</code> module and <code>change_message</code> function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
+
+defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+  <span style="color:#a6e22e">@moduledoc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  The Support module is the interface to customer support for the application.
+</span><span style="color:#e6db74">  Look to this module when you want to provide support to application users.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+
+  <span style="color:#75715e"># Alias the `Support.Message` module for easy reference later in this module.</span>
+  alias __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
+
+  <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Returns a changeset for a `Support.Message`.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+  <span style="color:#a6e22e">@spec</span> change_message() <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+  def change_message do
+    %<span style="color:#a6e22e">Message</span>{}
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%{})
+  end
+end
+</code></pre></div><p>This very simple module and <code>change_message</code> function is enough to make the test pass. This function can be used to build a changeset for a new message. Now I will add tests for sending a message.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
+
+defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
+  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> do
+    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+      fields <span style="color:#f92672">=</span> %{
+        <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
+        <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
+        <span style="color:#e6db74">body</span>: <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
+      }
+
+      assert {<span style="color:#e6db74">:ok</span>, %<span style="color:#a6e22e">Support.Message</span>{} <span style="color:#f92672">=</span> message} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(fields)
+      assert message<span style="color:#f92672">.</span>email <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>
+      assert message<span style="color:#f92672">.</span>subject <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Halp Me&#34;</span>
+      assert message<span style="color:#f92672">.</span>body <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
+    end
+
+    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> do
+      assert {<span style="color:#e6db74">:error</span>, changeset} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(%{})
+
+      refute changeset<span style="color:#f92672">.</span>valid?
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors_on(changeset)<span style="color:#f92672">.</span>email
+    end
+  end
+end
+</code></pre></div><p>Here, I added a new <code>describe</code> block for testing the functionality of sending a message. This block has two tests: one for a successful message send and one for a failed message send. Successfully sending a message results in an <code>:ok</code> tuple response with a sent message. Failing to send a message returns an <code>:error</code> tuple with a changeset. This is <a href="https://elixirschool.com/en/lessons/advanced/error-handling/#general-conventions">a standard way</a> of writing functions with error handling in Elixir.</p>
+<p>Running the tests results in the following failure:</p>
+<pre><code>** (UndefinedFunctionError) function MyApp.Support.send_message/1 is undefined or private
+</code></pre><p>I&rsquo;m missing the <code>send_message</code> function. I can open up the <code>MyApp.Support</code> module again and add the following definition of the function to the bottom:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
+
+defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+  <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Sends a message with given fields to the support team. Fields should include:
+</span><span style="color:#e6db74">  - `email`: Email for the user submitting the message for the support team to respond.
+</span><span style="color:#e6db74">  - `subject`: A short, general title as to the reason for support
+</span><span style="color:#e6db74">  - `body`: A longer description as to the reason for support and how the
+</span><span style="color:#e6db74">            support team might be able to help.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  If the message is invalid, an `{:error, changeset}` is returned. Returns
+</span><span style="color:#e6db74">  `{:ok, message}` on success.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+  <span style="color:#a6e22e">@spec</span> send_message(map) <span style="color:#f92672">::</span> {<span style="color:#e6db74">:ok</span>, <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>t()} <span style="color:#f92672">|</span> {<span style="color:#e6db74">:error</span>, <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()}
+  def send_message(fields) when is_map(fields) do
+    %<span style="color:#a6e22e">Message</span>{}
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
+  end
+end
+</code></pre></div><p>The <code>send_message</code> function takes a <code>map</code> of fields and returns either an <code>:ok</code> tuple with the <code>Message</code> struct or an <code>:error</code> tuple with a changeset. The <code>is_map</code> <a href="https://hexdocs.pm/elixir/Kernel.html#module-guards">guard clause</a> used here prevents a programmer using this interface from passing anything other than a <code>map</code> into this function. If something other than a <code>map</code> is passed in, the programmer is greeted with this error:</p>
+<pre><code>iex(1)&gt; MyApp.Support.send_message(&quot;oops&quot;)
+** (FunctionClauseError) no function clause matching in MyApp.Support.send_message/1
+
+    The following arguments were given to MyApp.Support.send_message/1:
+
+        # 1
+        &quot;oops&quot;
+
+    Attempted function clauses (showing 1 out of 1):
+
+        def send_message(fields) when is_map(fields)
+
+    (my_app 0.1.0) lib/my_app/support.ex:29: MyApp.Support.send_message/1
+</code></pre><p>This should give the programmer enough information to correct the error. I typically add guard clauses like this to my public interface modules to catch issues early in development before they creep out into production.</p>
+<p>The meat of the <code>send_message</code> function builds a new <code>Message</code> changeset with the given <code>fields</code>, then passes the changeset into <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#apply_action/2"><code>Ecto.Changeset.apply_action/2</code></a>. I used <code>apply_action</code> here because the data is not being persisted to a database. This function will simply apply the changes and return the <code>:ok</code> tuple when the changes are valid. Otherwise, the function returns the <code>:error</code> tuple when the changes are invalid. I am keeping the implementation simple for now. The actual email sending of the message to the support team will come later, because it&rsquo;s a bit more involved. Re-running the tests result in success.</p>
+<h2 id="refactoring">Refactoring</h2>
+<p>The eagle-eyed among you may have spotted an opportuntity for a refactor. The <code>send_message</code> and <code>change_message</code> functions both build a <code>Message</code> changeset. I can clean that up by simply allowing the <code>change_message</code> function to take an optional <code>map</code> of fields as an argument. I&rsquo;m only going to show the changes here:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
+
+defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+  <span style="color:#75715e"># I changed this function to take a `map` as an argument and set the default</span>
+  <span style="color:#75715e"># to an empty map.</span>
+  <span style="color:#a6e22e">@spec</span> change_message(map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+  def change_message(fields \\ %{}) do
+    %<span style="color:#a6e22e">Message</span>{}
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
+  end
+
+  <span style="color:#75715e"># This function was updated to use the new `change_message` function.</span>
+  def send_message(fields) when is_map(fields) do
+    fields
+    <span style="color:#f92672">|&gt;</span> change_message()
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
+  end
+end
+</code></pre></div><p>Re-running the tests should result in success. Let&rsquo;s take a step back now and review the final product.</p>
+<h2 id="the-final-product">The Final Product</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
+
+defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+  <span style="color:#a6e22e">@moduledoc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  The Support module is the interface to customer support for the application.
+</span><span style="color:#e6db74">  Look to this module when you want to provide support to application users.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+
+  alias __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
+
+  <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Returns a changeset for a Support Message.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+  <span style="color:#a6e22e">@spec</span> change_message(map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
+  def change_message(fields \\ %{}) do
+    %<span style="color:#a6e22e">Message</span>{}
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
+  end
+
+  <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span><span style="color:#e6db74">  Sends a message with given fields to the support team. Fields should include:
+</span><span style="color:#e6db74">  - `email`: Email for the user submitting the message for the support team to respond.
+</span><span style="color:#e6db74">  - `subject`: A short, general title as to the reason for support
+</span><span style="color:#e6db74">  - `body`: A longer description as to the reason for support and how the
+</span><span style="color:#e6db74">            support team might be able to help.
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">  If the message is invalid, an `{:error, changeset}` is returned. Returns
+</span><span style="color:#e6db74">  `{:ok, message}` on success.
+</span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
+  <span style="color:#a6e22e">@spec</span> send_message(map) <span style="color:#f92672">::</span> {<span style="color:#e6db74">:ok</span>, <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>t()} <span style="color:#f92672">|</span> {<span style="color:#e6db74">:error</span>, <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()}
+  def send_message(fields) when is_map(fields) do
+    fields
+    <span style="color:#f92672">|&gt;</span> change_message()
+    <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
+  end
+end
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
+
+defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
+  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+
+  alias <span style="color:#a6e22e">MyApp.Support</span>
+
+  test <span style="color:#e6db74">&#34;changing a message&#34;</span> do
+    assert %<span style="color:#a6e22e">Ecto.Changeset</span>{<span style="color:#e6db74">data</span>: %<span style="color:#a6e22e">Support.Message</span>{}} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>change_message()
+  end
+
+  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> do
+    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+      fields <span style="color:#f92672">=</span> %{
+        <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
+        <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
+        <span style="color:#e6db74">body</span>: <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
+      }
+
+      assert {<span style="color:#e6db74">:ok</span>, %<span style="color:#a6e22e">Support.Message</span>{} <span style="color:#f92672">=</span> message} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(fields)
+      assert message<span style="color:#f92672">.</span>email <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>
+      assert message<span style="color:#f92672">.</span>subject <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Halp Me&#34;</span>
+      assert message<span style="color:#f92672">.</span>body <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
+    end
+
+    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> do
+      assert {<span style="color:#e6db74">:error</span>, changeset} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(%{})
+
+      refute changeset<span style="color:#f92672">.</span>valid?
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors_on(changeset)<span style="color:#f92672">.</span>email
+    end
+  end
+end
+</code></pre></div><h2 id="wrap-up">Wrap-Up</h2>
+<p>This post laid the foundation of the public interface for the <code>Support</code> domain with functions to change and send a message. In this post, I covered:</p>
+<ul>
+<li>What kind of functions go on a public interface module.</li>
+<li>Setting up tests to run concurrently with other tests in the application.</li>
+<li>Following error handling conventions with <code>:ok</code> and <code>:error</code> tuple responses.</li>
+<li>Using guard clauses on a public interface to catch errors in development.</li>
+<li>Refactoring a tiny bit of duplication using function composition.</li>
+</ul>
+<p>This post did not handle the actual sending of an email to the support team. This functionality is quite involved and will make for a good next installment of this Let&rsquo;s Code series. Thanks for joining me! 👋</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>I would like to thank <a href="https://tmr08c.github.io/">Troy Rosenberg</a> and <a href="https://medium.com/@katestudwell">Kate Studwell</a> for their feedback on earlier drafts of this post. 🙇‍♂️🙏</p>
+
+    </div>
+    
+      
+        <div class="pagination">
+          <div class="pagination__title">
+            <span class="pagination__title-h">Read other posts</span>
+            <hr />
+          </div>
+          <div class="pagination__buttons">
+            
+            
+              <span class="button next">
+                <a href="https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/">
+                  <span class="button__text">Let&#39;s Code: Contact Form in Phoenix -- The Schema</span>
+                  <span class="button__icon">→</span>
+                </a>
+              </span>
+            
+          </div>
+        </div>
+      
+    
+
+
+    
+      
+        
+
+      
+    
+
+    </div>
+
+      </div>
+
+      
+        <footer class="footer">
+  <div class="footer__inner">
+    
+      <a href="/" class="logo" style="text-decoration: none;">
+  
+    <span class="logo__mark"><svg xmlns="http://www.w3.org/2000/svg" class="greater-icon" viewBox="0 0 44 44">
+  <path fill="none" d="M15 8l14.729 14.382L15 35.367"/>
+</svg>
+</span>
+    <span class="logo__text">zachporter.dev</span>
+    <span class="logo__cursor"></span>
+  
+</a>
+
+      <div class="copyright">
+        <span>© 2020</span>
+
+        <div class="social-links">
+          
+  <span class="social-link">
+    <a href="https://github.com/zporter" target="_blank">
+      <i class="fab fa-github-square"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="https://twitter.com/zporter9" target="_blank">
+      <i class="fab fa-twitter-square"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="https://www.linkedin.com/in/zach-porter-5058b0181" target="_blank">
+      <i class="fab fa-linkedin"></i>
+    </a>
+  </span>
+
+
+
+          
+  <span class="social-link">
+    <a href="mailto:zporter9@gmail.com" target="_blank">
+      <i class="fas fa-envelope-square"></i>
+    </a>
+  </span>
+
+
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+<script src="https://zachporter.dev/assets/main.js"></script>
+<script src="https://zachporter.dev/assets/prism.js"></script>
+
+
+      
+    </div>
+
+    
+  </body>
+</html>

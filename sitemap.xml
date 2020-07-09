@@ -3,37 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://zachporter.dev/tags/elixir/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-two/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/phoenix/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/posts/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/tags/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zachporter.dev/</loc>
+    <lastmod>2020-07-09T00:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://zachporter.dev/tags/ecto/</loc>
     <lastmod>2020-05-05T12:00:00-05:00</lastmod>
   </url>
   
   <url>
-    <loc>https://zachporter.dev/tags/elixir/</loc>
-    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://zachporter.dev/posts/lets-code-contact-form-in-phoenix-part-one/</loc>
-    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/tags/phoenix/</loc>
-    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/posts/</loc>
-    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/tags/</loc>
-    <lastmod>2020-05-05T12:00:00-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zachporter.dev/</loc>
     <lastmod>2020-05-05T12:00:00-05:00</lastmod>
   </url>
   

@@ -9,35 +9,15 @@
     <description>Recent content in Tags on Zach Porter: Software Engineer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 May 2020 12:00:00 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 09 Jul 2020 00:00:00 -0500</lastBuildDate>
     
 	<atom:link href="https://zachporter.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>ecto</title>
-      <link>https://zachporter.dev/tags/ecto/</link>
-      <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
-      
-      <guid>https://zachporter.dev/tags/ecto/</guid>
-      <description>
-        
-          
-          
-          
-        
-        
-        
-          
-          
-        
-        </description>
-    </item>
-    
-    <item>
       <title>elixir</title>
       <link>https://zachporter.dev/tags/elixir/</link>
-      <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
+      <pubDate>Thu, 09 Jul 2020 00:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/elixir/</guid>
       <description>
@@ -57,9 +37,29 @@
     <item>
       <title>phoenix</title>
       <link>https://zachporter.dev/tags/phoenix/</link>
-      <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
+      <pubDate>Thu, 09 Jul 2020 00:00:00 -0500</pubDate>
       
       <guid>https://zachporter.dev/tags/phoenix/</guid>
+      <description>
+        
+          
+          
+          
+        
+        
+        
+          
+          
+        
+        </description>
+    </item>
+    
+    <item>
+      <title>ecto</title>
+      <link>https://zachporter.dev/tags/ecto/</link>
+      <pubDate>Tue, 05 May 2020 12:00:00 -0500</pubDate>
+      
+      <guid>https://zachporter.dev/tags/ecto/</guid>
       <description>
         
           
