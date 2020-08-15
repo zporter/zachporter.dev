@@ -20,7 +20,7 @@ jobs:
         submodules: true
     - name: Install Dependencies
       env:
-        HUGO_VERSION: 0.73.0
+        HUGO_VERSION: 0.74.3
       run: |
         echo "installing hugo $HUGO_VERSION"
         curl -sL -o /tmp/hugo.deb \
