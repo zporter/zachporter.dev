@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: true
-    - name: Install Dependencies
+    - name: Install Hugo
       env:
         HUGO_VERSION: 0.74.3
       run: |
@@ -27,6 +27,13 @@ jobs:
         https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb && \
         sudo dpkg -i /tmp/hugo.deb && \
         rm /tmp/hugo.deb
+    - name: Install NodeJS
+      env:
+        NODE_VERSION: 12.x
+      run: |
+        echo "Installing NodeJS $NODE_VERSION"
+        curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sudo -E bash -
+        sudo apt-get install -y nodejs
     - name: Publish Site
       env:
         REPOSITORY: "https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git"

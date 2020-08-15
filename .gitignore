@@ -1,2 +1,4 @@
 # Ignore public dir for Github pages deploys
 public
+resources
+node_modules
