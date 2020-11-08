@@ -182,17 +182,17 @@
 <p>Getting started with GitHub Actions is pretty straightforward. GitHub provides a great starter template and has some examples in their documentation. There&rsquo;s also <a href="https://github.com/marketplace?type=actions">a marketplace</a> for actions to use or, in my case, use as inspiration to write my own. One downside to the marketplace is that there seems to be quite a bit of legacy code that I can only assume used earlier versions of GitHub Actions. As far as I can tell, GitHub has since changed to using a YAML-formatted file and have changed how variables can be exposed to the workspace as environment variables. The source code of the actions in the Marketplace is pretty easy to read, so you can make a judgement call as to whether you can pull it in or whether you need to roll your own.</p>
 <h2 id="implementation">Implementation</h2>
 <p>I started with a workflow titled &ldquo;Hugo Build and Release&rdquo; with the configuration and steps stored in <code>.github/workflows/hugo_build_and_release.yml</code>. The first line in the file is the name of the workflow.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">name</span>: Hugo Build and Release
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Hugo Build and Release</span>
 </code></pre></div><p>Simple enough. The next section in the workflow deals with the events that need to happen on GitHub in order to trigger the Action to run.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">on</span>:
-  <span style="color:#66d9ef">push</span>:
-    <span style="color:#66d9ef">branches</span>:
-    - master
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">on</span>:
+  <span style="color:#f92672">push</span>:
+    <span style="color:#f92672">branches</span>:
+    - <span style="color:#ae81ff">master</span>
 </code></pre></div><p>I knew I wanted to trigger the publish action on push to <code>master</code>, so this is the configuration that I chose. You can review <a href="https://help.github.com/en/articles/workflow-syntax-for-github-actions#on">the documentation</a> for more actions to use to trigger the workflow.</p>
 <p>Next up in the file is the <code>jobs</code> specification.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">jobs</span>:
-  <span style="color:#66d9ef">deploy</span>:
-    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">deploy</span>:
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
 </code></pre></div><p>Here, I only have one job titled <code>deploy</code>. This is because by default <code>jobs</code> run in parallel. My workflow is very sequential:</p>
 <ol>
 <li>Checkout the source code</li>
@@ -202,26 +202,26 @@
 <p>It made sense to only define one job to execute a sequence of steps that are dependent on each other. If you have a workflow that can easily run in parallel, then I encourage you to consult <a href="https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobs">the documentation</a> on how best to configure.</p>
 <p>I chose to run my job on the <code>ubuntu-latest</code> virtual environment, since that&rsquo;s the one I&rsquo;m most familiar with. GitHub supports a number of other <a href="https://help.github.com/en/articles/virtual-environments-for-github-actions#supported-virtual-environments-and-hardware-resources">virtual environments</a>. Choose the one that best fits your workflow.</p>
 <p>Now that I have a job, I need to define some steps.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">steps</span>:
-- <span style="color:#66d9ef">uses</span>: actions/checkout@v1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">steps</span>:
+- <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v1</span>
 </code></pre></div><p>GitHub gave me a <code>checkout</code> action as part of the starter template. This will checkout the source code in the <code>master</code> branch and store it in a workspace on the virtual environment.</p>
 <h2 id="problems-with-checkout">Problems with Checkout</h2>
 <p>At the time, I had two <a href="https://github.com/blog/2104-working-with-submodules">git submodules</a> in the project: one for <a href="https://github.com/zporter/hugo-theme-hello-friend">the theme</a> and one for the <code>public</code> directory, which was pointed to the <code>gh-pages</code> branch for publishing the GitHub Pages site. I&rsquo;ve since moved away from the second submodule and followed <a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/#deployment-of-project-pages-from-your-gh-pages-branch">Hugo&rsquo;s documentation</a> on deploying from the <code>master</code> branch to the remote <code>gh-pages</code> branch on GitHub. To pull in the git submodule for the theme, I had to add a simple option to allow checking out submodules:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#66d9ef">uses</span>: actions/checkout@v1
-  <span style="color:#66d9ef">with</span>:
-    <span style="color:#66d9ef">submodules</span>: <span style="color:#66d9ef">true</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v1</span>
+  <span style="color:#f92672">with</span>:
+    <span style="color:#f92672">submodules</span>: <span style="color:#66d9ef">true</span>
 </code></pre></div><p>Running the action so far resulted in a success, so now it was time to move onto building the static site.</p>
 <h2 id="installing-hugo">Installing Hugo</h2>
 <p>I knew I would need Hugo in order to build the static site. It was just a matter of determining the best way to install the dependency. After reviewing several existing Actions in the Marketplace, I settled on adding the following step to my job:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#66d9ef">name</span>: Install Dependencies
-  <span style="color:#66d9ef">env</span>:
-    <span style="color:#66d9ef">HUGO_VERSION</span>: <span style="color:#ae81ff">0.58.3</span>
-  <span style="color:#66d9ef">run</span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">    echo &#34;installing hugo $HUGO_VERSION&#34;</span>
-    curl -sL -o /tmp/hugo.deb \
-    https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb <span style="color:#75715e">&amp;&amp;</span> \
-    sudo dpkg -i /tmp/hugo.deb <span style="color:#75715e">&amp;&amp;</span> \
-    rm /tmp/hugo.deb
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install Dependencies</span>
+  <span style="color:#f92672">env</span>:
+    <span style="color:#f92672">HUGO_VERSION</span>: <span style="color:#ae81ff">0.58.3</span>
+  <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">    echo &#34;installing hugo $HUGO_VERSION&#34;
+</span><span style="color:#e6db74">    curl -sL -o /tmp/hugo.deb \
+</span><span style="color:#e6db74">    https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb &amp;&amp; \
+</span><span style="color:#e6db74">    sudo dpkg -i /tmp/hugo.deb &amp;&amp; \
+</span><span style="color:#e6db74">    rm /tmp/hugo.deb</span>    
 </code></pre></div><p>Since this is in an Ubuntu container, <a href="https://gohugo.io/getting-started/installing/#install-hugo-from-tarball">the Hugo Debian package</a> can be downloaded with the version of Hugo I need.</p>
 <p>With the Hugo dependency installed, it&rsquo;s now time to publish the site.</p>
 <h2 id="publishing">Publishing</h2>
@@ -259,47 +259,47 @@ git push -f <span style="color:#e6db74">${</span>REPOSITORY<span style="color:#6
 </code></pre></div><p>Each of the <code>echo</code> commands above should make it pretty clear what is happening. The script is leveraging <a href="https://git-scm.com/docs/git-worktree/">Git worktrees</a>, which comes in handy when committing and pushing work in another directory to a remote branch. In this case, the site code gets generated into the <code>public/</code> directory, and the changes are committed and pushed up to the remote <code>gh-pages</code> branch. GitHub takes over from there to post the content here.</p>
 <p>To publish from my computer, I now only need to specify the <code>REPOSITORY</code> environment variable, and I&rsquo;m up and running.</p>
 <p>To run this from the GitHub Action, I just add the following to my <code>hugo_build_and_release.yml</code> specification:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#66d9ef">name</span>: Publish Site
-  <span style="color:#66d9ef">env</span>:
-    <span style="color:#66d9ef">REPOSITORY</span>: <span style="color:#e6db74">&#34;https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git&#34;</span>
-  <span style="color:#66d9ef">run</span>: ./bin/publish.sh
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Publish Site</span>
+  <span style="color:#f92672">env</span>:
+    <span style="color:#f92672">REPOSITORY</span>: <span style="color:#e6db74">&#34;https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git&#34;</span>
+  <span style="color:#f92672">run</span>: <span style="color:#ae81ff">./bin/publish.sh</span>
 </code></pre></div><p>This uses <a href="https://github.blog/2013-05-16-personal-api-tokens/">a Personal Access Token</a>, which, at the time of this writing, was required in order to effectively trigger the GitHub Pages publish action. That may be fixed in the future for <a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#using-the-github_token-in-a-workflow">the already provided access token</a> within the GitHub Action. I gave my Personal Access Token <code>repo</code> and <code>admin:repo_hook</code> privileges. This might&rsquo;ve been overkill, but it was very difficult to dig up information on what exactly was required to trigger a GitHub Pages publication. Once that Personal Access Token was generated, I stored it as a Secret on the repository and referenced it as <code>secrets.GITHUB_PAT</code>.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>That concludes the approach that I took to use GitHub Actions to publish my site built using the Hugo static site generator on GitHub Pages. The process was a lot of trial and error. Being early days for GitHub Actions, the documentation was difficult to search and sift through, and having no feedback that my site was failing to build on GitHub Pages after a push was difficult to debug and fix. I ended up reading what others had done on the Actions Marketplace, so kudos to those trailblazers for leaving comments as to why they needed to use a Personal Access Token.</p>
 <p>The final workflow file ended up like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">name</span>: Hugo Build and Release
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Hugo Build and Release</span>
 
-<span style="color:#66d9ef">on</span>:
-  <span style="color:#66d9ef">push</span>:
-    <span style="color:#66d9ef">branches</span>:
-    - master
+<span style="color:#f92672">on</span>:
+  <span style="color:#f92672">push</span>:
+    <span style="color:#f92672">branches</span>:
+    - <span style="color:#ae81ff">master</span>
 
-<span style="color:#66d9ef">jobs</span>:
-  <span style="color:#66d9ef">deploy</span>:
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">deploy</span>:
 
-    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
     
-    <span style="color:#66d9ef">steps</span>:
-    - <span style="color:#66d9ef">name</span>: Configure Git for Github
-      <span style="color:#66d9ef">run</span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">        git config --global user.name &#34;${GITHUB_ACTOR}&#34;</span>
-        git config --global user.email <span style="color:#e6db74">&#34;${GITHUB_ACTOR}@users.noreply.github.com&#34;</span>
-    - <span style="color:#66d9ef">uses</span>: actions/checkout@v1
-      <span style="color:#66d9ef">with</span>:
-        <span style="color:#66d9ef">submodules</span>: <span style="color:#66d9ef">true</span>
-    - <span style="color:#66d9ef">name</span>: Install Dependencies
-      <span style="color:#66d9ef">env</span>:
-        <span style="color:#66d9ef">HUGO_VERSION</span>: <span style="color:#ae81ff">0.58.3</span>
-      <span style="color:#66d9ef">run</span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">        echo &#34;installing hugo $HUGO_VERSION&#34;</span>
-        curl -sL -o /tmp/hugo.deb \
-        https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb <span style="color:#75715e">&amp;&amp;</span> \
-        sudo dpkg -i /tmp/hugo.deb <span style="color:#75715e">&amp;&amp;</span> \
-        rm /tmp/hugo.deb
-    - <span style="color:#66d9ef">name</span>: Publish Site
-      <span style="color:#66d9ef">env</span>:
-        <span style="color:#66d9ef">REPOSITORY</span>: <span style="color:#e6db74">&#34;https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git&#34;</span>
-      <span style="color:#66d9ef">run</span>: ./bin/publish.sh
+    <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Configure Git for Github</span>
+      <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">        git config --global user.name &#34;${GITHUB_ACTOR}&#34;
+</span><span style="color:#e6db74">        git config --global user.email &#34;${GITHUB_ACTOR}@users.noreply.github.com&#34;</span>        
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v1</span>
+      <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">submodules</span>: <span style="color:#66d9ef">true</span>
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Install Dependencies</span>
+      <span style="color:#f92672">env</span>:
+        <span style="color:#f92672">HUGO_VERSION</span>: <span style="color:#ae81ff">0.58.3</span>
+      <span style="color:#f92672">run</span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">        echo &#34;installing hugo $HUGO_VERSION&#34;
+</span><span style="color:#e6db74">        curl -sL -o /tmp/hugo.deb \
+</span><span style="color:#e6db74">        https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb &amp;&amp; \
+</span><span style="color:#e6db74">        sudo dpkg -i /tmp/hugo.deb &amp;&amp; \
+</span><span style="color:#e6db74">        rm /tmp/hugo.deb</span>        
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Publish Site</span>
+      <span style="color:#f92672">env</span>:
+        <span style="color:#f92672">REPOSITORY</span>: <span style="color:#e6db74">&#34;https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git&#34;</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">./bin/publish.sh</span>
 </code></pre></div><p>Overall, I am thankful that this is available to me so I can push changes to the <code>master</code> branch and not need to remember a separate publishing step. I just hope that GitHub can continue to improve the documentation and provide feedback when services fail. I encourage you, dear reader, to find ways to automate your workflows with GitHub Actions. Write up your experiences and share back with the community. 💜</p>
 
     </div>

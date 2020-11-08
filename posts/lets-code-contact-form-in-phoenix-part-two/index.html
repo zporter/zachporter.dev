@@ -200,54 +200,54 @@ In Part One of this series, I started with a Message module to serve as the data
 <p>In true Test-Driven Development (TDD) fashion, I can begin with a test file for this new module and functions:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
 
-defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.SupportTest</span> <span style="color:#66d9ef">do</span>
   <span style="color:#75715e"># The `DataCase` module ships with a standard Phoenix app.</span>
   <span style="color:#75715e"># See the docs for more info:</span>
   <span style="color:#75715e"># https://hexdocs.pm/phoenix/testing_contexts.html#the-datacase</span>
   <span style="color:#75715e">#</span>
   <span style="color:#75715e"># The `async: true` option allows the tests in this file to run concurrently</span>
   <span style="color:#75715e"># with other tests in the application. Tests in this file still run serially.</span>
-  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+  <span style="color:#f92672">use</span> <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: <span style="color:#66d9ef">true</span>
 
-  alias <span style="color:#a6e22e">MyApp.Support</span>
+  <span style="color:#f92672">alias</span> <span style="color:#a6e22e">MyApp.Support</span>
 
-  test <span style="color:#e6db74">&#34;changing a message&#34;</span> do
+  test <span style="color:#e6db74">&#34;changing a message&#34;</span> <span style="color:#66d9ef">do</span>
     <span style="color:#75715e"># `Support.change_message/1` is expected to return a Changeset for a Message.</span>
     <span style="color:#75715e">#</span>
     <span style="color:#75715e"># I&#39;m using pattern-matching here to assert the returned data types as</span>
     <span style="color:#75715e"># opposed to looking for specific values.</span>
     assert %<span style="color:#a6e22e">Ecto.Changeset</span>{<span style="color:#e6db74">data</span>: %<span style="color:#a6e22e">Support.Message</span>{}} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>change_message()
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Running this test results in the following failure:</p>
 <pre><code>** (UndefinedFunctionError) function MyApp.Support.change_message/0 is undefined (module MyApp.Support is not available)`
 </code></pre><p>This is stating that not only are we missing the <code>change_message</code> function, but the <code>MyApp.Support</code> module doesn&rsquo;t even exist. Let&rsquo;s fix that by creating the <code>Support</code> module and <code>change_message</code> function:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support</span> <span style="color:#66d9ef">do</span>
   <span style="color:#a6e22e">@moduledoc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  The Support module is the interface to customer support for the application.
 </span><span style="color:#e6db74">  Look to this module when you want to provide support to application users.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
 
   <span style="color:#75715e"># Alias the `Support.Message` module for easy reference later in this module.</span>
-  alias __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
+  <span style="color:#f92672">alias</span> __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
 
   <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  Returns a changeset for a `Support.Message`.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
   <span style="color:#a6e22e">@spec</span> change_message() <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-  def change_message do
+  <span style="color:#66d9ef">def</span> change_message <span style="color:#66d9ef">do</span>
     %<span style="color:#a6e22e">Message</span>{}
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%{})
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>This very simple module and <code>change_message</code> function is enough to make the test pass. This function can be used to build a changeset for a new message. Now I will add tests for sending a message.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
 
-defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
-  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> do
-    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.SupportTest</span> <span style="color:#66d9ef">do</span>
+  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> <span style="color:#66d9ef">do</span>
+    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> <span style="color:#66d9ef">do</span>
       fields <span style="color:#f92672">=</span> %{
         <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
         <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -258,23 +258,23 @@ defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
       assert message<span style="color:#f92672">.</span>email <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>
       assert message<span style="color:#f92672">.</span>subject <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Halp Me&#34;</span>
       assert message<span style="color:#f92672">.</span>body <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
-    end
+    <span style="color:#66d9ef">end</span>
 
-    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> do
+    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> <span style="color:#66d9ef">do</span>
       assert {<span style="color:#e6db74">:error</span>, changeset} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(%{})
 
       refute changeset<span style="color:#f92672">.</span>valid?
-      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors_on(changeset)<span style="color:#f92672">.</span>email
-    end
-  end
-end
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors_on(changeset)<span style="color:#f92672">.</span>email
+    <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Here, I added a new <code>describe</code> block for testing the functionality of sending a message. This block has two tests: one for a successful message send and one for a failed message send. Successfully sending a message results in an <code>:ok</code> tuple response with a sent message. Failing to send a message returns an <code>:error</code> tuple with a changeset. This is <a href="https://elixirschool.com/en/lessons/advanced/error-handling/#general-conventions">a standard way</a> of writing functions with error handling in Elixir.</p>
 <p>Running the tests results in the following failure:</p>
 <pre><code>** (UndefinedFunctionError) function MyApp.Support.send_message/1 is undefined or private
 </code></pre><p>I&rsquo;m missing the <code>send_message</code> function. I can open up the <code>MyApp.Support</code> module again and add the following definition of the function to the bottom:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support</span> <span style="color:#66d9ef">do</span>
   <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  Sends a message with given fields to the support team. Fields should include:
 </span><span style="color:#e6db74">  - `email`: Email for the user submitting the message for the support team to respond.
@@ -286,12 +286,12 @@ defmodule <span style="color:#a6e22e">MyApp.Support</span> do
 </span><span style="color:#e6db74">  `{:ok, message}` on success.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
   <span style="color:#a6e22e">@spec</span> send_message(map) <span style="color:#f92672">::</span> {<span style="color:#e6db74">:ok</span>, <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>t()} <span style="color:#f92672">|</span> {<span style="color:#e6db74">:error</span>, <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()}
-  def send_message(fields) when is_map(fields) do
+  <span style="color:#66d9ef">def</span> send_message(fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
     %<span style="color:#a6e22e">Message</span>{}
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>The <code>send_message</code> function takes a <code>map</code> of fields and returns either an <code>:ok</code> tuple with the <code>Message</code> struct or an <code>:error</code> tuple with a changeset. The <code>is_map</code> <a href="https://hexdocs.pm/elixir/Kernel.html#module-guards">guard clause</a> used here prevents a programmer using this interface from passing anything other than a <code>map</code> into this function. If something other than a <code>map</code> is passed in, the programmer is greeted with this error:</p>
 <pre><code>iex(1)&gt; MyApp.Support.send_message(&quot;oops&quot;)
 ** (FunctionClauseError) no function clause matching in MyApp.Support.send_message/1
@@ -312,42 +312,42 @@ end
 <p>The eagle-eyed among you may have spotted an opportuntity for a refactor. The <code>send_message</code> and <code>change_message</code> functions both build a <code>Message</code> changeset. I can clean that up by simply allowing the <code>change_message</code> function to take an optional <code>map</code> of fields as an argument. I&rsquo;m only going to show the changes here:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support</span> <span style="color:#66d9ef">do</span>
   <span style="color:#75715e"># I changed this function to take a `map` as an argument and set the default</span>
   <span style="color:#75715e"># to an empty map.</span>
   <span style="color:#a6e22e">@spec</span> change_message(map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-  def change_message(fields \\ %{}) do
+  <span style="color:#66d9ef">def</span> change_message(fields \\ %{}) <span style="color:#66d9ef">do</span>
     %<span style="color:#a6e22e">Message</span>{}
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
-  end
+  <span style="color:#66d9ef">end</span>
 
   <span style="color:#75715e"># This function was updated to use the new `change_message` function.</span>
-  def send_message(fields) when is_map(fields) do
+  <span style="color:#66d9ef">def</span> send_message(fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
     fields
     <span style="color:#f92672">|&gt;</span> change_message()
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Re-running the tests should result in success. Let&rsquo;s take a step back now and review the final product.</p>
 <h2 id="the-final-product">The Final Product</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support</span> do
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support</span> <span style="color:#66d9ef">do</span>
   <span style="color:#a6e22e">@moduledoc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  The Support module is the interface to customer support for the application.
 </span><span style="color:#e6db74">  Look to this module when you want to provide support to application users.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
 
-  alias __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
+  <span style="color:#f92672">alias</span> __MODULE__<span style="color:#f92672">.</span><span style="color:#a6e22e">Message</span>
 
   <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  Returns a changeset for a Support Message.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
   <span style="color:#a6e22e">@spec</span> change_message(map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-  def change_message(fields \\ %{}) do
+  <span style="color:#66d9ef">def</span> change_message(fields \\ %{}) <span style="color:#66d9ef">do</span>
     %<span style="color:#a6e22e">Message</span>{}
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(fields)
-  end
+  <span style="color:#66d9ef">end</span>
 
   <span style="color:#a6e22e">@doc</span> <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">  Sends a message with given fields to the support team. Fields should include:
@@ -360,25 +360,25 @@ defmodule <span style="color:#a6e22e">MyApp.Support</span> do
 </span><span style="color:#e6db74">  `{:ok, message}` on success.
 </span><span style="color:#e6db74">  &#34;&#34;&#34;</span>
   <span style="color:#a6e22e">@spec</span> send_message(map) <span style="color:#f92672">::</span> {<span style="color:#e6db74">:ok</span>, <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>t()} <span style="color:#f92672">|</span> {<span style="color:#e6db74">:error</span>, <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()}
-  def send_message(fields) when is_map(fields) do
+  <span style="color:#66d9ef">def</span> send_message(fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
     fields
     <span style="color:#f92672">|&gt;</span> change_message()
     <span style="color:#f92672">|&gt;</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>apply_action(<span style="color:#e6db74">:insert</span>)
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support_test.exs</span>
 
-defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
-  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.SupportTest</span> <span style="color:#66d9ef">do</span>
+  <span style="color:#f92672">use</span> <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: <span style="color:#66d9ef">true</span>
 
-  alias <span style="color:#a6e22e">MyApp.Support</span>
+  <span style="color:#f92672">alias</span> <span style="color:#a6e22e">MyApp.Support</span>
 
-  test <span style="color:#e6db74">&#34;changing a message&#34;</span> do
+  test <span style="color:#e6db74">&#34;changing a message&#34;</span> <span style="color:#66d9ef">do</span>
     assert %<span style="color:#a6e22e">Ecto.Changeset</span>{<span style="color:#e6db74">data</span>: %<span style="color:#a6e22e">Support.Message</span>{}} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>change_message()
-  end
+  <span style="color:#66d9ef">end</span>
 
-  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> do
-    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+  describe <span style="color:#e6db74">&#34;sending a message&#34;</span> <span style="color:#66d9ef">do</span>
+    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> <span style="color:#66d9ef">do</span>
       fields <span style="color:#f92672">=</span> %{
         <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
         <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -389,16 +389,16 @@ defmodule <span style="color:#a6e22e">MyApp.SupportTest</span> do
       assert message<span style="color:#f92672">.</span>email <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>
       assert message<span style="color:#f92672">.</span>subject <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;Halp Me&#34;</span>
       assert message<span style="color:#f92672">.</span>body <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;I am having problems.&#34;</span>
-    end
+    <span style="color:#66d9ef">end</span>
 
-    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> do
+    test <span style="color:#e6db74">&#34;with invalid fields&#34;</span> <span style="color:#66d9ef">do</span>
       assert {<span style="color:#e6db74">:error</span>, changeset} <span style="color:#f92672">=</span> <span style="color:#a6e22e">Support</span><span style="color:#f92672">.</span>send_message(%{})
 
       refute changeset<span style="color:#f92672">.</span>valid?
-      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors_on(changeset)<span style="color:#f92672">.</span>email
-    end
-  end
-end
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors_on(changeset)<span style="color:#f92672">.</span>email
+    <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><h2 id="wrap-up">Wrap-Up</h2>
 <p>This post laid the foundation of the public interface for the <code>Support</code> domain with functions to change and send a message. In this post, I covered:</p>
 <ul>

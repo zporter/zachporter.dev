@@ -191,15 +191,15 @@ The contact form will take the minimal number of fields from the user (email, su
 <p>In the case of the contact form, a <em>message</em> from the user to the support team sounds like the only type specification I will need. I begin with a <code>Message</code> module nestled under a <code>Support</code> context. If you&rsquo;re unfamiliar with the concept of contexts within Phoenix, I encourage you to read more about them <a href="https://hexdocs.pm/phoenix/contexts.html#content">in the Phoenix guides</a>. For now, you can think of the <code>Support</code> context as a boundary and public interface to all support team-related functionality for the application.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
-  <span style="color:#a6e22e">@moduledoc</span> false
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support.Message</span> <span style="color:#66d9ef">do</span>
+  <span style="color:#a6e22e">@moduledoc</span> <span style="color:#66d9ef">false</span>
 
   <span style="color:#a6e22e">@type</span> t <span style="color:#f92672">::</span> <span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{
           <span style="color:#e6db74">email</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t(),
           <span style="color:#e6db74">subject</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t(),
           <span style="color:#e6db74">body</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t()
         }
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Here, I define a <code>Support.Message</code> module to model the user&rsquo;s, you guessed it, support message. The structure of this module should contain the email, subject, and body fields. The <code>Message</code> module is an internal module to be used by the <code>Support</code> context only.</p>
 <p>Stepping through the code, I start by specifying <code>@moduledoc false</code>. <a href="https://hexdocs.pm/elixir/writing-documentation.html#hiding-internal-modules-and-functions">This convention</a> hides this internal module from our application&rsquo;s documentation. I typically document modules that are part of the public interface of the application and hide the rest.</p>
 <p>The <code>@type t</code> convention documents the type this module models. In this case, it&rsquo;s a struct of this module, denoted with the <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#__MODULE__/0"><code>__MODULE__</code> convenience function</a>, and containing <code>email</code>, <code>subject</code>, and <code>body</code> attributes. Simple enough so far. Note, this module will not compile because a struct has not been defined. Next, I will add a schema using <a href="https://hexdocs.pm/ecto/Ecto.html">the Ecto library</a> which will give us the struct and allow this module to be compiled.</p>
@@ -211,36 +211,36 @@ end
 <p>I could use an Elixir struct here instead of an Ecto schema. However, Ecto provides changesets and validations to make change tracking and validating input easier than if I had written something from scratch. Even though I do not intend to persist this data to the database, I still want to validate the inputs and track changes to a message. I will add one to the <code>Message</code> module:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-use <span style="color:#a6e22e">Ecto.Schema</span>
+<span style="color:#f92672">use</span> <span style="color:#a6e22e">Ecto.Schema</span>
 
-embedded_schema do
+embedded_schema <span style="color:#66d9ef">do</span>
   field(<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:string</span>)
   field(<span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:string</span>)
   field(<span style="color:#e6db74">:body</span>, <span style="color:#e6db74">:string</span>)
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>The <code>use Ecto.Schema</code> line brings in the macro support for related functions. The function I use from this macro is <code>embedded_schema</code>. Within that function, I add the fields from the typespec defined earlier: <code>email</code>, <code>subject</code>, and <code>body</code>.</p>
 <p>With this schema, the module compiles. Yay! So far, I&rsquo;ve added the typespec for documentation and reference, and an embedded schema for the structure. Now it&rsquo;s time to work with messages via <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#content">Ecto changesets</a>.</p>
 <h2 id="defining-a-changeset">Defining a Changeset</h2>
 <p>Before getting straight into defining a changeset, I like to take this time to stub out desired functionality with some tests. I&rsquo;ll define a test in <code>test/my_app/support/message_test.exs</code> and begin with an outline of functionality that I would like tested.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
-  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support.MessageTest</span> <span style="color:#66d9ef">do</span>
+  <span style="color:#f92672">use</span> <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: <span style="color:#66d9ef">true</span>
 
-  alias <span style="color:#a6e22e">MyApp.Support.Message</span>
+  <span style="color:#f92672">alias</span> <span style="color:#a6e22e">MyApp.Support.Message</span>
 
-  describe <span style="color:#e6db74">&#34;changing a message&#34;</span> do
+  describe <span style="color:#e6db74">&#34;changing a message&#34;</span> <span style="color:#66d9ef">do</span>
     test <span style="color:#e6db74">&#34;with valid fields&#34;</span>
 
     test <span style="color:#e6db74">&#34;missing required fields&#34;</span>
 
     test <span style="color:#e6db74">&#34;invalid email format&#34;</span>
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>This provides me with a good structure as I begin to fill in the implementation of the requirements. I have a <code>describe</code> block for tracking changes to a new or existing message. Within that <code>describe</code> block are three pending tests for each use-case that cover changing a message with valid and invalid inputs. I will begin with the first test:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
-test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+test <span style="color:#e6db74">&#34;with valid fields&#34;</span> <span style="color:#66d9ef">do</span>
   fields <span style="color:#f92672">=</span> %{
     <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
     <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -250,48 +250,48 @@ test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
   changeset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, fields)
 
   assert changeset<span style="color:#f92672">.</span>valid?
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>I always like to start with the happy path, then follow that up with the failure cases. This ensures that I cover a majority of the usage. Running this test results in a failure because there isn&rsquo;t a <code>changeset/2</code> function on <code>Message</code>. Let&rsquo;s fix that.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-import <span style="color:#a6e22e">Ecto.Changeset</span>
+<span style="color:#f92672">import</span> <span style="color:#a6e22e">Ecto.Changeset</span>
 
 <span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
+<span style="color:#66d9ef">def</span> changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
   message
   <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>The <code>import Ecto.Changeset</code> line imports all functions from that Ecto module. The function we are using in our <code>changeset</code> function is <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#cast/4"><code>cast</code></a>, which takes the <code>fields</code> as changes for the <code>message</code> based on the given set of permitted attributes: <code>:email</code>, <code>:subject</code>, and <code>:body</code>. I will be using a couple more functions later on, which is why I&rsquo;m importing them all.</p>
 <p>The typespec, defined as <code>@spec changeset(t(), map) :: Ecto.Changeset.t()</code>, documents that the <code>changeset</code> function takes two arguments and returns an <code>Ecto.Changeset</code> struct. The first argument uses the <code>@type t</code> definition above, specifying that it should be a <code>Message</code> struct. The second argument specifies it should be an Elixir <code>map</code>.</p>
 <p>Defining a simple <code>changeset</code> function that casts the expected fields of the message is enough to get the first test to pass. Onto to the next test.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
-test <span style="color:#e6db74">&#34;missing required fields&#34;</span> do
+test <span style="color:#e6db74">&#34;missing required fields&#34;</span> <span style="color:#66d9ef">do</span>
   changeset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, %{})
 
   refute changeset<span style="color:#f92672">.</span>valid?
 
   errors <span style="color:#f92672">=</span> errors_on(changeset)
 
-  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>email
-  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>subject
-  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>body
-end
+  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>email
+  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>subject
+  assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>body
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>This test is asserting that all fields on a message will be required before submitting to the support team. One thing to note with this test that might not be well-known is <a href="https://github.com/phoenixframework/phoenix/blob/cc261a67a83649555841b92c3cbc1df024888cc8/installer/templates/phx_ecto/data_case.ex#L40-L54">the <code>errors_on</code> function</a> provided by a Phoenix Ecto template that&rsquo;s included in your Phoenix project when using Ecto. This helper function uses <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#traverse_errors/2">Ecto&rsquo;s <code>traverse_errors</code> function</a> to provide a map of errors for a given changeset. I use it here to assert the &ldquo;can&rsquo;t be blank&rdquo; message is in each field&rsquo;s set of errors.</p>
 <p>Running this test results in a failure. The code to get this to pass will use <a href="https://hexdocs.pm/ecto/Ecto.Changeset.html#validate_required/3">Ecto&rsquo;s <code>validate_required</code> function</a> like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
 <span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
+<span style="color:#66d9ef">def</span> changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
   message
   <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
   <span style="color:#75715e"># Added this line here</span>
   <span style="color:#f92672">|&gt;</span> validate_required([<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Re-running the test results in success. Fantastic! So far, I have covered casting the expected fields of the message and validating their presence. The last test covers validating the format of the message&rsquo;s email address.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
-test <span style="color:#e6db74">&#34;invalid email format&#34;</span> do
+test <span style="color:#e6db74">&#34;invalid email format&#34;</span> <span style="color:#66d9ef">do</span>
   fields <span style="color:#f92672">=</span> %{
     <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeanstest&#34;</span>,
     <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -301,27 +301,27 @@ test <span style="color:#e6db74">&#34;invalid email format&#34;</span> do
   cset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, fields)
 
   refute cset<span style="color:#f92672">.</span>valid?
-  assert <span style="color:#e6db74">&#34;has invalid format&#34;</span> in errors_on(cset)<span style="color:#f92672">.</span>email
-end
+  assert <span style="color:#e6db74">&#34;has invalid format&#34;</span> <span style="color:#f92672">in</span> errors_on(cset)<span style="color:#f92672">.</span>email
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>This tests that an invalid email (e.g. <code>barry@bluejeanstest</code>) gets surfaced back to the user. Adding a simple format validation to the changeset should address this edge-case.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
+<span style="color:#66d9ef">def</span> changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
   message
   <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
   <span style="color:#f92672">|&gt;</span> validate_required([<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
   <span style="color:#75715e"># Added this line here</span>
   <span style="color:#f92672">|&gt;</span> validate_format(<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">~r/(.*?)\@\w+\.\w+/</span>)
-end
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>Running all the tests again results in success. Now the changes can be committed to version control, and we can celebrate the conclusion of the first step of adding a contact form to a Phoenix application. 🎉</p>
 <h2 id="the-final-product">The Final Product</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># lib/my_app/support/message.ex</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
-  <span style="color:#a6e22e">@moduledoc</span> false
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support.Message</span> <span style="color:#66d9ef">do</span>
+  <span style="color:#a6e22e">@moduledoc</span> <span style="color:#66d9ef">false</span>
 
-  use <span style="color:#a6e22e">Ecto.Schema</span>
-  import <span style="color:#a6e22e">Ecto.Changeset</span>
+  <span style="color:#f92672">use</span> <span style="color:#a6e22e">Ecto.Schema</span>
+  <span style="color:#f92672">import</span> <span style="color:#a6e22e">Ecto.Changeset</span>
 
   <span style="color:#a6e22e">@type</span> t <span style="color:#f92672">::</span> <span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{
           <span style="color:#e6db74">email</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t(),
@@ -329,29 +329,29 @@ defmodule <span style="color:#a6e22e">MyApp.Support.Message</span> do
           <span style="color:#e6db74">body</span>: <span style="color:#a6e22e">String</span><span style="color:#f92672">.</span>t()
         }
 
-  embedded_schema do
+  embedded_schema <span style="color:#66d9ef">do</span>
     field(<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:string</span>)
     field(<span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:string</span>)
     field(<span style="color:#e6db74">:body</span>, <span style="color:#e6db74">:string</span>)
-  end
+  <span style="color:#66d9ef">end</span>
 
   <span style="color:#a6e22e">@spec</span> changeset(t(), map) <span style="color:#f92672">::</span> <span style="color:#a6e22e">Ecto.Changeset</span><span style="color:#f92672">.</span>t()
-  def changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) when is_map(fields) do
+  <span style="color:#66d9ef">def</span> changeset(<span style="color:#960050;background-color:#1e0010">%</span>__MODULE__{} <span style="color:#f92672">=</span> message, fields) <span style="color:#f92672">when</span> is_map(fields) <span style="color:#66d9ef">do</span>
     message
     <span style="color:#f92672">|&gt;</span> cast(fields, [<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
     <span style="color:#f92672">|&gt;</span> validate_required([<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">:subject</span>, <span style="color:#e6db74">:body</span>])
     <span style="color:#f92672">|&gt;</span> validate_format(<span style="color:#e6db74">:email</span>, <span style="color:#e6db74">~r/(.*?)\@\w+\.\w+/</span>)
-  end
-end
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elixir" data-lang="elixir"><span style="color:#75715e"># test/my_app/support/message_test.exs</span>
 
-defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
-  use <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: true
+<span style="color:#66d9ef">defmodule</span> <span style="color:#a6e22e">MyApp.Support.MessageTest</span> <span style="color:#66d9ef">do</span>
+  <span style="color:#f92672">use</span> <span style="color:#a6e22e">MyApp.DataCase</span>, <span style="color:#e6db74">async</span>: <span style="color:#66d9ef">true</span>
 
-  alias <span style="color:#a6e22e">MyApp.Support.Message</span>
+  <span style="color:#f92672">alias</span> <span style="color:#a6e22e">MyApp.Support.Message</span>
 
-  describe <span style="color:#e6db74">&#34;changing a message&#34;</span> do
-    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> do
+  describe <span style="color:#e6db74">&#34;changing a message&#34;</span> <span style="color:#66d9ef">do</span>
+    test <span style="color:#e6db74">&#34;with valid fields&#34;</span> <span style="color:#66d9ef">do</span>
       fields <span style="color:#f92672">=</span> %{
         <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeans.test&#34;</span>,
         <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -361,21 +361,21 @@ defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
       changeset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, fields)
 
       assert changeset<span style="color:#f92672">.</span>valid?
-    end
+    <span style="color:#66d9ef">end</span>
 
-    test <span style="color:#e6db74">&#34;missing required fields&#34;</span> do
+    test <span style="color:#e6db74">&#34;missing required fields&#34;</span> <span style="color:#66d9ef">do</span>
       changeset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, %{})
 
       refute changeset<span style="color:#f92672">.</span>valid?
 
       errors <span style="color:#f92672">=</span> errors_on(changeset)
 
-      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>email
-      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>subject
-      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> in errors<span style="color:#f92672">.</span>body
-    end
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>email
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>subject
+      assert <span style="color:#e6db74">&#34;can&#39;t be blank&#34;</span> <span style="color:#f92672">in</span> errors<span style="color:#f92672">.</span>body
+    <span style="color:#66d9ef">end</span>
 
-    test <span style="color:#e6db74">&#34;invalid email format&#34;</span> do
+    test <span style="color:#e6db74">&#34;invalid email format&#34;</span> <span style="color:#66d9ef">do</span>
       fields <span style="color:#f92672">=</span> %{
         <span style="color:#e6db74">email</span>: <span style="color:#e6db74">&#34;barry@bluejeanstest&#34;</span>,
         <span style="color:#e6db74">subject</span>: <span style="color:#e6db74">&#34;Halp Me&#34;</span>,
@@ -385,10 +385,10 @@ defmodule <span style="color:#a6e22e">MyApp.Support.MessageTest</span> do
       cset <span style="color:#f92672">=</span> <span style="color:#a6e22e">Message</span><span style="color:#f92672">.</span>changeset(%<span style="color:#a6e22e">Message</span>{}, fields)
 
       refute cset<span style="color:#f92672">.</span>valid?
-      assert <span style="color:#e6db74">&#34;has invalid format&#34;</span> in errors_on(cset)<span style="color:#f92672">.</span>email
-    end
-  end
-end
+      assert <span style="color:#e6db74">&#34;has invalid format&#34;</span> <span style="color:#f92672">in</span> errors_on(cset)<span style="color:#f92672">.</span>email
+    <span style="color:#66d9ef">end</span>
+  <span style="color:#66d9ef">end</span>
+<span style="color:#66d9ef">end</span>
 </code></pre></div><p>In the next post, I will be adding the module and functions for the <code>Support</code> context within the application. This context will use the <code>Message</code> and <code>changeset</code> function created in this post to track and validate inputs from the user as well as send an email to the support team. If you have any questions or would like to discuss anything you saw here, feel free to comment over <a href="https://news.ycombinator.com/item?id=23228070">on Hacker News</a>. Thanks for joining me! 👋</p>
 <h2 id="acknowledgements">Acknowledgements</h2>
 <p>I would like to thank <a href="https://tmr08c.github.io/">Troy Rosenberg</a> and <a href="https://medium.com/@katestudwell">Kate Studwell</a> for their feedback on earlier drafts of this post. 🙇‍♂️🙏</p>
