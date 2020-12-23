@@ -20,7 +20,7 @@ jobs:
         submodules: true
     - name: Install Hugo
       env:
-        HUGO_VERSION: 0.78.2
+        HUGO_VERSION: 0.79.1
       run: |
         echo "installing hugo $HUGO_VERSION"
         curl -sL -o /tmp/hugo.deb \
@@ -29,7 +29,7 @@ jobs:
         rm /tmp/hugo.deb
     - name: Install NodeJS
       env:
-        NODE_VERSION: 12.x
+        NODE_VERSION: 14.x
       run: |
         echo "Installing NodeJS $NODE_VERSION"
         curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | sudo -E bash -
